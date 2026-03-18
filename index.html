@@ -31,6 +31,8 @@
       --screen-dim-overlay-opacity-mid: 0.17;
       --screen-dim-overlay-opacity-dark: 0.34;
       --screen-dim-overlay-opacity: 0;
+      --workspace-screen-zoom: .92;
+      --workspace-tablet-zoom: .58;
     }
 
     html {
@@ -840,6 +842,7 @@
       position:relative;
       display:flex;
       flex-direction:row;
+      flex-wrap:wrap;
       align-items:flex-start;
       gap:8px;
       overflow:visible;
@@ -848,7 +851,7 @@
       position:relative;
       flex:0 0 auto;
       width:max-content;
-      min-width:330px;
+      min-width:min(330px, 100%);
       max-width:390px;
     }
     .today-topic-panel,
@@ -875,8 +878,8 @@
     }
     .today-word-shell{
       position:relative;
-      flex:1 1 0;
-      min-width:0;
+      flex:1 1 280px;
+      min-width:min(280px, 100%);
     }
     .today-word-panel{
       width:100%;
@@ -1252,6 +1255,8 @@
       background:linear-gradient(165deg, rgba(255,255,255,.98), rgba(255,241,242,.96));
       box-shadow:0 12px 26px rgba(15,23,42,.18);
       padding:8px 10px;
+      box-sizing:border-box;
+      max-width:100%;
       display:none;
     }
     .today-word-panel.is-expanded .today-word-popover{
@@ -1516,7 +1521,8 @@
       background:linear-gradient(148deg, rgba(191,219,254,1), rgba(147,197,253,1));
       box-shadow:0 10px 22px rgba(2,6,23,.3), 0 0 0 1px rgba(255,255,255,.15) inset;
     }
-    #color-boost-toggle{
+    #color-boost-toggle,
+    #tablet-optimize-toggle{
       border:1px solid rgba(37,99,235,.34);
       background:linear-gradient(150deg, rgba(239,246,255,.95), rgba(219,234,254,.9));
       color:#1e3a8a;
@@ -1528,6 +1534,12 @@
       box-shadow:0 8px 16px rgba(2,6,23,.12);
     }
     #color-boost-toggle.is-active{
+      border-color:rgba(30,64,175,.65);
+      background:linear-gradient(148deg, rgba(59,130,246,.98), rgba(37,99,235,.96));
+      color:#eff6ff;
+      box-shadow:0 9px 18px rgba(30,64,175,.34);
+    }
+    #tablet-optimize-toggle.is-active{
       border-color:rgba(30,64,175,.65);
       background:linear-gradient(148deg, rgba(59,130,246,.98), rgba(37,99,235,.96));
       color:#eff6ff;
@@ -1687,18 +1699,26 @@
       box-shadow:0 0 0 2px rgba(30,41,59,.34), 0 18px 36px rgba(2,6,23,.32) !important;
     }
     @media screen{
+      #tool-tab-bar{
+        zoom:1;
+      }
       #workspace-shell{
-        zoom:.92;
+        zoom:var(--workspace-screen-zoom, .92);
       }
       #workspace-shell.is-docs-mode{
-        zoom:.92;
+        zoom:var(--workspace-screen-zoom, .92);
       }
-      /* Windows向け最適化時のみ、ツール本体をわずかに縮小して表示範囲を確保する */
-      body.color-boost-level-2 #workspace-shell{
-        zoom:1;
+      body.display-mode-windows{
+        --workspace-screen-zoom:1;
       }
-      body.color-boost-level-2 #workspace-shell.is-docs-mode{
-        zoom:1;
+      body.display-mode-tablet{
+        --workspace-screen-zoom:var(--workspace-tablet-zoom, .58);
+      }
+      body.display-mode-tablet #tool-tab-bar{
+        zoom:var(--workspace-tablet-zoom, .58);
+      }
+      body.tool-focus-mode{
+        --workspace-screen-zoom:1;
       }
       body.color-boost-level-2.tool-focus-mode #workspace-shell{
         zoom:1;
@@ -5600,7 +5620,7 @@
     }
     .history-print-hygiene .hygiene-table th,
     .history-print-hygiene .hygiene-table td{
-      padding:1px 2px;
+      padding:var(--h-print-cell-pad-y, 1px) var(--h-print-cell-pad-x, 2px);
     }
     .history-print-hygiene .hygiene-table th{
       font-size:9px;
@@ -5642,6 +5662,64 @@
       border-radius:9999px;
       font-size:14px;
     }
+    .history-print-hygiene .hygiene-paper[data-layout="double"]{
+      padding:6.4mm 6.8mm 4.8mm;
+      gap:2.4mm;
+    }
+    .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-head{
+      padding-bottom:2mm;
+    }
+    .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-title{
+      font-size:18px;
+    }
+    .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-mode-badge{
+      font-size:10px;
+    }
+    .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-day-section{
+      flex:none;
+    }
+    .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-table-wrap{
+      flex:none;
+      overflow:hidden;
+    }
+    .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-table th,
+    .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-table td{
+      padding:var(--h-print-cell-pad-y, 2px) var(--h-print-cell-pad-x, 3px);
+    }
+    .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-table th{
+      line-height:1.2;
+    }
+    .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-foot{
+      gap:6px;
+    }
+    .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-foot-mid{
+      padding-top:2px;
+      padding-bottom:2px;
+      border-bottom-width:1px;
+      transform:none;
+    }
+    .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-foot-bottom{
+      padding-top:2px;
+      margin-top:auto;
+      transform:none;
+    }
+    .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-date-group{
+      gap:6px;
+    }
+    .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-foot-label{
+      font-size:8px;
+    }
+    .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-date-value{
+      font-size:16px;
+    }
+    .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-sign-group{
+      min-width:72px;
+    }
+    .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-sign-line{
+      width:24px;
+      height:24px;
+      font-size:10px;
+    }
     .history-export-capture .history-print-shift .shift-preview-page{
       transform:translateY(7px);
     }
@@ -5667,6 +5745,76 @@
     .history-export-capture .history-print-hygiene .hygiene-date-group .hygiene-date-value{
       position:relative;
       top:-8px;
+    }
+    .history-export-capture .history-print-hygiene .hygiene-paper[data-layout="double"]{
+      transform:translateY(3px);
+    }
+    .history-export-capture .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-foot{
+      transform:none;
+    }
+    .history-export-capture .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-date-group .hygiene-foot-label,
+    .history-export-capture .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-date-group .hygiene-date-value{
+      top:0;
+    }
+    .history-export-capture[data-history-print-tool="hygiene"]{
+      width:794px;
+      min-height:1123px;
+    }
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-snapshot,
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene{
+      width:794px;
+      min-height:1123px;
+    }
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-paper{
+      width:703px;
+      max-width:703px;
+      box-sizing:border-box;
+      --h-export-text-shift-y:-3px;
+    }
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-table th{
+      padding-top:0;
+      padding-bottom:4px;
+      line-height:1.12;
+      vertical-align:top;
+    }
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-table td{
+      padding-top:0;
+      padding-bottom:2px;
+      vertical-align:top;
+    }
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-paper-title,
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-mode-badge,
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-row-name-input,
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-temp-line,
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-foot-label,
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-date-value{
+      position:relative;
+      top:var(--h-export-text-shift-y, -1px);
+    }
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-paper[data-layout="double"]{
+      transform:none;
+      margin-top:3px;
+    }
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-foot{
+      transform:none;
+    }
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-foot-mid{
+      padding-top:4px;
+      padding-bottom:6px;
+    }
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-foot-bottom{
+      padding-top:4px;
+    }
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-date-group{
+      gap:6px;
+      align-items:flex-end;
+    }
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-date-value{
+      line-height:1.08;
+    }
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-date-group .hygiene-foot-label,
+    .history-export-capture[data-history-print-tool="hygiene"] .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-date-group .hygiene-date-value{
+      top:0;
     }
     .history-export-capture .history-print-shift .shift-preview-main-head-cell{
       align-items:flex-start;
@@ -8198,7 +8346,7 @@
       }
       body.history-printing #history-print-stage .history-print-hygiene .hygiene-table th,
       body.history-printing #history-print-stage .history-print-hygiene .hygiene-table td{
-        padding:1px 2px !important;
+        padding:var(--h-print-cell-pad-y, 1px) var(--h-print-cell-pad-x, 2px) !important;
       }
       body.history-printing #history-print-stage .history-print-hygiene .hygiene-table th{
         font-size:9px !important;
@@ -8258,6 +8406,69 @@
         border-radius:9999px !important;
         font-size:14px !important;
         transform:translateY(-2px) !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"]{
+        padding:6.4mm 6.8mm 4.8mm !important;
+        gap:2.4mm !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-head{
+        padding-bottom:2mm !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-title{
+        font-size:18px !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-mode-badge{
+        font-size:10px !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-day-section{
+        flex:none !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-table-wrap{
+        flex:none !important;
+        overflow:hidden !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-table th,
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-table td{
+        padding:var(--h-print-cell-pad-y, 2px) var(--h-print-cell-pad-x, 3px) !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-table th{
+        line-height:1.2 !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-foot{
+        gap:6px !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-foot-mid{
+        padding-top:2px !important;
+        padding-bottom:2px !important;
+        border-bottom-width:1px !important;
+        transform:none !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-foot-bottom{
+        padding-top:2px !important;
+        margin-top:auto !important;
+        transform:none !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-date-group{
+        gap:6px !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-foot-label{
+        font-size:8px !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-date-value{
+        font-size:16px !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-date-group .hygiene-foot-label,
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-date-group .hygiene-date-value{
+        top:0 !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-sign-group{
+        min-width:72px !important;
+      }
+      body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper[data-layout="double"] .hygiene-sign-line{
+        width:24px !important;
+        height:24px !important;
+        font-size:10px !important;
+        transform:none !important;
       }
       body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper,
       body.history-printing #history-print-stage .history-print-hygiene .hygiene-paper *{
@@ -8589,7 +8800,7 @@
       }
       body.hygiene-printing #sec-hygiene .hygiene-table th,
       body.hygiene-printing #sec-hygiene .hygiene-table td{
-        padding:1px 2px !important;
+        padding:var(--h-print-cell-pad-y, 1px) var(--h-print-cell-pad-x, 2px) !important;
       }
       body.hygiene-printing #sec-hygiene .hygiene-table th{
         font-size:9px !important;
@@ -8641,6 +8852,69 @@
         border-radius:9999px !important;
         font-size:14px !important;
         transform:translateY(-2px) !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"]{
+        padding:6.4mm 6.8mm 4.8mm !important;
+        gap:2.4mm !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-head{
+        padding-bottom:2mm !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-title{
+        font-size:18px !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-mode-badge{
+        font-size:10px !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-day-section{
+        flex:none !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-table-wrap{
+        flex:none !important;
+        overflow:hidden !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-table th,
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-table td{
+        padding:var(--h-print-cell-pad-y, 2px) var(--h-print-cell-pad-x, 3px) !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-table th{
+        line-height:1.2 !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-foot{
+        gap:6px !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-foot-mid{
+        padding-top:2px !important;
+        padding-bottom:2px !important;
+        border-bottom-width:1px !important;
+        transform:none !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-paper-foot-bottom{
+        padding-top:2px !important;
+        margin-top:auto !important;
+        transform:none !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-date-group{
+        gap:6px !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-foot-label{
+        font-size:8px !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-date-value{
+        font-size:16px !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-date-group .hygiene-foot-label,
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-date-group .hygiene-date-value{
+        top:0 !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-sign-group{
+        min-width:72px !important;
+      }
+      body.hygiene-printing #sec-hygiene .hygiene-paper[data-layout="double"] .hygiene-sign-line{
+        width:24px !important;
+        height:24px !important;
+        font-size:10px !important;
+        transform:none !important;
       }
       body.hygiene-printing #sec-hygiene .hygiene-paper,
       body.hygiene-printing #sec-hygiene .hygiene-paper *{
@@ -9019,14 +9293,23 @@
     .hygiene-free-form{
       display:flex;
       gap:8px;
+      min-width:0;
+      align-items:stretch;
     }
     .hygiene-free-input{
-      flex:1;
+      flex:1 1 auto;
+      min-width:0;
       border:1px solid rgba(148,163,184,.8);
       border-radius:10px;
       background:#fff;
       padding:10px 12px;
       font-size:14px;
+    }
+    .hygiene-free-form .hygiene-btn{
+      flex:0 0 auto;
+      min-width:68px;
+      padding-left:10px;
+      padding-right:10px;
     }
     .hygiene-free-input:focus{
       outline:none;
@@ -9229,6 +9512,20 @@
       --h-remove-pad-y: 2px;
       --h-remove-pad-x: 6px;
       --h-head-font: 11px;
+      --h-name-col-width: 23%;
+      --h-temp-col-width: 12%;
+    }
+    .hygiene-day-section{
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+    }
+    .hygiene-day-section-primary{
+      flex:1 1 auto;
+    }
+    .hygiene-day-section-secondary,
+    .hygiene-paper-foot-bottom{
+      display:none;
     }
     .hygiene-paper-head{
       display:flex;
@@ -9294,10 +9591,10 @@
       height:var(--h-row-height);
     }
     .hygiene-table .name-col{
-      width:23%;
+      width:var(--h-name-col-width);
     }
     .hygiene-table .temp-col{
-      width:12%;
+      width:var(--h-temp-col-width);
     }
     .hygiene-name-cell{
       display:flex;
@@ -9369,8 +9666,66 @@
       justify-content:space-between;
       gap:16px;
       flex-wrap:wrap;
-      margin-top:auto;
       transform:translateY(4px);
+    }
+    .hygiene-paper[data-layout="single"] .hygiene-paper-foot-mid{
+      margin-top:auto;
+    }
+    .hygiene-paper[data-layout="double"]{
+      padding-bottom:16px;
+      gap:12px;
+      --h-name-col-width: 16.6667%;
+      --h-temp-col-width: 16.6667%;
+    }
+    .hygiene-paper[data-layout="double"] .hygiene-paper-head{
+      padding-bottom:4px;
+    }
+    .hygiene-paper[data-layout="double"] .hygiene-paper-title{
+      font-size:26px;
+    }
+    .hygiene-paper[data-layout="double"] .hygiene-mode-badge{
+      font-size:18px;
+    }
+    .hygiene-paper[data-layout="double"] .hygiene-day-section-primary,
+    .hygiene-paper[data-layout="double"] .hygiene-day-section-secondary{
+      flex:0 0 auto;
+    }
+    .hygiene-paper[data-layout="double"] .hygiene-table-wrap{
+      flex:none;
+      overflow:visible;
+    }
+    .hygiene-paper[data-layout="double"] .hygiene-day-section-secondary{
+      display:flex;
+    }
+    .hygiene-paper[data-layout="double"] .hygiene-paper-foot-mid{
+      padding-top:8px;
+      padding-bottom:8px;
+      border-bottom:2px solid #0f172a;
+      margin-top:0;
+      transform:none;
+    }
+    .hygiene-paper[data-layout="double"] .hygiene-paper-foot-mid .hygiene-sign-group{
+      display:none;
+    }
+    .hygiene-paper[data-layout="double"] .hygiene-paper-foot-bottom{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:16px;
+      margin-top:auto;
+      transform:none;
+    }
+    .hygiene-paper[data-layout="double"] .hygiene-date-value{
+      font-size:24px;
+    }
+    .hygiene-paper[data-layout="double"] .hygiene-sign-group{
+      min-width:108px;
+      gap:4px;
+    }
+    .hygiene-paper[data-layout="double"] .hygiene-sign-line{
+      width:52px;
+      height:52px;
+      font-size:20px;
     }
     .hygiene-date-group{
       display:flex;
@@ -26846,38 +27201,69 @@ init();
 		              </div>
 
 	              <div class="hygiene-paper-wrap">
-	                <article id="hygiene-paper" class="hygiene-paper">
+	                <article id="hygiene-paper" class="hygiene-paper" data-layout="single">
 	                  <header class="hygiene-paper-head">
 	                    <h4 class="hygiene-paper-title">衛生チェック記入表</h4>
 	                    <span id="hygiene-mode-badge" class="hygiene-mode-badge">未選択</span>
 	                  </header>
 
-	                  <div class="hygiene-table-wrap">
-	                    <table class="hygiene-table" aria-label="衛生チェック記入表">
-	                      <thead>
-	                        <tr>
-	                          <th class="name-col">名前</th>
-	                          <th>下痢／嘔吐／発熱</th>
-	                          <th>爪の長さ／マニキュア</th>
-	                          <th>指輪／ピアス／時計</th>
-	                          <th>手指の怪我／手荒れ</th>
-	                          <th class="temp-col">体温</th>
-	                        </tr>
-	                      </thead>
-	                      <tbody id="hygiene-table-body"></tbody>
-	                    </table>
-	                  </div>
+	                  <section class="hygiene-day-section hygiene-day-section-primary">
+	                    <div class="hygiene-table-wrap">
+	                      <table class="hygiene-table" aria-label="衛生チェック記入表">
+	                        <thead>
+	                          <tr>
+	                            <th class="name-col">名前</th>
+	                            <th>下痢／嘔吐／発熱</th>
+	                            <th>爪の長さ／マニキュア</th>
+	                            <th>指輪／ピアス／時計</th>
+	                            <th>手指の怪我／手荒れ</th>
+	                            <th class="temp-col">体温</th>
+	                          </tr>
+	                        </thead>
+	                        <tbody id="hygiene-table-body-main"></tbody>
+	                      </table>
+	                    </div>
+	                  </section>
 
-	                  <footer class="hygiene-paper-foot">
+	                  <section class="hygiene-paper-foot hygiene-paper-foot-mid">
 	                    <div class="hygiene-date-group">
-	                      <p class="hygiene-foot-label">本日の日付</p>
+	                      <p id="hygiene-date-label" class="hygiene-foot-label">本日の日付</p>
 	                      <p id="hygiene-date-text" class="hygiene-date-value">----年　　月　　日（　）</p>
 	                    </div>
 	                    <div class="hygiene-sign-group">
 	                      <p class="hygiene-foot-label">責任者確認欄</p>
 	                      <div class="hygiene-sign-line">印</div>
 	                    </div>
-	                  </footer>
+	                  </section>
+
+	                  <section class="hygiene-day-section hygiene-day-section-secondary">
+	                    <div class="hygiene-table-wrap">
+	                      <table class="hygiene-table" aria-label="翌日の衛生チェック記入表">
+	                        <thead>
+	                          <tr>
+	                            <th class="name-col">名前</th>
+	                            <th>下痢／嘔吐／発熱</th>
+	                            <th>爪の長さ／マニキュア</th>
+	                            <th>指輪／ピアス／時計</th>
+	                            <th>手指の怪我／手荒れ</th>
+	                            <th class="temp-col">体温</th>
+	                          </tr>
+	                        </thead>
+	                        <tbody id="hygiene-table-body-next"></tbody>
+	                      </table>
+	                    </div>
+	                  </section>
+
+	                  <section class="hygiene-paper-foot hygiene-paper-foot-bottom">
+	                    <div class="hygiene-date-group">
+	                      <p id="hygiene-next-date-label" class="hygiene-foot-label">翌日の日付</p>
+	                      <p id="hygiene-next-date-text" class="hygiene-date-value">----年　　月　　日（　）</p>
+	                    </div>
+	                    <div class="hygiene-sign-group">
+	                      <p class="hygiene-foot-label">責任者確認欄</p>
+	                      <div class="hygiene-sign-line">印</div>
+	                    </div>
+	                  </section>
 	                </article>
 	              </div>
 	            </div>
@@ -27260,6 +27646,7 @@ init();
           type="button"
           title="キャッシュをクリア"
         >🧹 キャッシュクリア</button>
+        <button id="tablet-optimize-toggle" class="clickable no-print" type="button" aria-pressed="false">タブレットに最適化</button>
         <button id="color-boost-toggle" class="clickable no-print" type="button" aria-pressed="false">Windows用に最適化</button>
         <button id="screen-dim-toggle" class="clickable no-print" type="button" aria-pressed="true" data-dim-level="1" title="画面の明るさ調整（中間）" aria-label="画面の明るさ調整（中間）">
           <span class="screen-dim-icon" aria-hidden="true">💡</span>
@@ -27554,6 +27941,37 @@ init();
     const mailFreeCategoryRecordStorageKey = 'tool_mail_free_category_record_v1';
     const mailSignatureDivider = '━━━━━━━━━━━━━━━━━━━━━';
     const mailAddressHistoryMaxItems = 30;
+    const mailUniformPresetTo = 'k.yoshida@weara.co.jp';
+    const mailUniformLegacyTo = 'k.yoshida@aramark-uniform.co.jp';
+    const mailUniformBccItems = Object.freeze([
+      Object.freeze({ mail: 't.ueno@weara.co.jp', checked: true }),
+      Object.freeze({ mail: 'k.takayama@weara.co.jp', checked: true }),
+      Object.freeze({ mail: 't.ueno@aramark-uniform.co.jp', checked: false }),
+      Object.freeze({ mail: 'k.takayama@aramark-uniform.co.jp', checked: false })
+    ]);
+    const mailUniformBody = `株式会社ウェアラ
+山陽事業所
+
+吉田 寛汰 様
+上野 貴子 様
+高山 和馬 様
+
+お世話になっております。
+
+白衣の件でご連絡いたしました。
+
+添付データのとおり、退職者の反映および新規白衣発注を含めた最新版に更新しております。
+
+お手すきの際にご確認のうえ、随時ご対応いただけますと幸いです。
+
+なお、添付リストに記載のない人物の白衣は廃止として問題ございません。
+
+お忙しいところ恐れ入りますが、引き続きよろしくお願いいたします。`;
+    const mailTakadaBccEntry = Object.freeze({
+      mail: 'maa._.p--luv--yp_skc--u3u--yui@docomo.ne.jp',
+      label: '髙田',
+      checked: true
+    });
     const storeSyncState = {
       initialized: false,
       suffix: mailDefaultStoreSuffix,
@@ -30121,8 +30539,10 @@ init();
     }
 
     const colorBoostStorageKey = 'tool_color_boost_v1';
-    const colorBoostState = {
-      enabled: false
+    const displayModeStorageKey = 'tool_display_mode_v1';
+    const displayModeState = {
+      current: 'windows',
+      desktop: 'windows'
     };
     const screenDimFilterStorageKey = 'tool_screen_dim_filter_v2';
     const legacyScreenDimFilterStorageKey = 'tool_screen_dim_filter_v1';
@@ -30130,45 +30550,175 @@ init();
       level: 1
     };
 
-    function applyColorBoost(nextEnabled, { save = true } = {}) {
-      const enabled = Boolean(nextEnabled);
-      colorBoostState.enabled = enabled;
-      document.body.classList.toggle('color-boost-level-2', enabled);
+    function normalizeDisplayMode(rawMode, fallbackMode = 'windows') {
+      const raw = String(rawMode || '').trim().toLowerCase();
+      if (raw === 'mac' || raw === 'windows' || raw === 'tablet') return raw;
+      const fallback = String(fallbackMode || '').trim().toLowerCase();
+      if (fallback === 'mac' || fallback === 'windows') return fallback;
+      return 'windows';
+    }
 
-      const btn = document.getElementById('color-boost-toggle');
-      if (btn instanceof HTMLButtonElement) {
-        btn.classList.toggle('is-active', enabled);
-        btn.setAttribute('aria-pressed', enabled ? 'true' : 'false');
-        btn.textContent = enabled ? 'Mac用に最適化' : 'Windows用に最適化';
-      }
-      if (!save) return;
+    function readLegacyDesktopDisplayMode() {
       try {
-        window.localStorage?.setItem(colorBoostStorageKey, enabled ? '1' : '0');
+        const saved = window.localStorage?.getItem(colorBoostStorageKey);
+        if (saved === '0') return 'mac';
+        if (saved === '1') return 'windows';
       } catch (_) {}
+      return 'windows';
+    }
+
+    function readStoredDisplayModeState() {
+      const legacyDesktopMode = readLegacyDesktopDisplayMode();
+      let raw = '';
+      try {
+        raw = String(window.localStorage?.getItem(displayModeStorageKey) || '').trim();
+      } catch (_) {
+        raw = '';
+      }
+      if (!raw) {
+        return {
+          current: legacyDesktopMode,
+          desktop: legacyDesktopMode
+        };
+      }
+
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          const desktopCandidate = normalizeDisplayMode(
+            parsed.desktopMode || parsed.desktop || legacyDesktopMode,
+            legacyDesktopMode
+          );
+          const desktop = desktopCandidate === 'tablet' ? legacyDesktopMode : desktopCandidate;
+          const current = normalizeDisplayMode(parsed.currentMode || parsed.current || desktop, desktop);
+          return {
+            current,
+            desktop: current === 'tablet' ? desktop : current
+          };
+        }
+      } catch (_) {}
+
+      const current = normalizeDisplayMode(raw, legacyDesktopMode);
+      return {
+        current,
+        desktop: current === 'tablet' ? legacyDesktopMode : current
+      };
+    }
+
+    function getCurrentDisplayMode() {
+      return normalizeDisplayMode(displayModeState.current, 'windows');
+    }
+
+    function getDesktopDisplayMode() {
+      const desktop = normalizeDisplayMode(displayModeState.desktop, 'windows');
+      return desktop === 'tablet' ? 'windows' : desktop;
+    }
+
+    function getEffectiveDesktopDisplayMode() {
+      const current = getCurrentDisplayMode();
+      return current === 'tablet' ? getDesktopDisplayMode() : current;
+    }
+
+    function isWindowsDisplayMode(mode = getEffectiveDesktopDisplayMode()) {
+      return normalizeDisplayMode(mode, 'windows') === 'windows';
+    }
+
+    function writeStoredDisplayModeState() {
+      try {
+        window.localStorage?.setItem(displayModeStorageKey, JSON.stringify({
+          currentMode: getCurrentDisplayMode(),
+          desktopMode: getDesktopDisplayMode()
+        }));
+        window.localStorage?.setItem(colorBoostStorageKey, isWindowsDisplayMode() ? '1' : '0');
+      } catch (_) {}
+    }
+
+    function syncDisplayModeButtons() {
+      const desktopBtn = document.getElementById('color-boost-toggle');
+      const tabletBtn = document.getElementById('tablet-optimize-toggle');
+      const currentMode = getCurrentDisplayMode();
+      const desktopMode = getEffectiveDesktopDisplayMode();
+
+      if (desktopBtn instanceof HTMLButtonElement) {
+        const nextDesktopMode = desktopMode === 'windows' ? 'mac' : 'windows';
+        const nextDesktopLabel = nextDesktopMode === 'mac' ? 'Mac用に最適化' : 'Windows用に最適化';
+        const windowsActive = currentMode === 'windows';
+        desktopBtn.classList.toggle('is-active', windowsActive);
+        desktopBtn.setAttribute('aria-pressed', windowsActive ? 'true' : 'false');
+        desktopBtn.textContent = nextDesktopLabel;
+        desktopBtn.title = currentMode === 'tablet'
+          ? `現在はタブレット向け縮小表示中です。押すと${nextDesktopLabel}に切り替えます`
+          : `${nextDesktopLabel}に切り替えます`;
+      }
+
+      if (tabletBtn instanceof HTMLButtonElement) {
+        const tabletActive = currentMode === 'tablet';
+        tabletBtn.classList.toggle('is-active', tabletActive);
+        tabletBtn.setAttribute('aria-pressed', tabletActive ? 'true' : 'false');
+        tabletBtn.textContent = 'タブレットに最適化';
+        tabletBtn.title = tabletActive
+          ? 'タブレット向けの強い縮小表示が有効です。押すと直前のMac/Windows表示に戻します'
+          : 'ツール全体をタブレット向けに強く縮小表示します';
+      }
+    }
+
+    function applyDisplayMode(nextMode, { save = true } = {}) {
+      const normalized = normalizeDisplayMode(nextMode, getCurrentDisplayMode());
+      if (normalized === 'tablet') {
+        displayModeState.current = 'tablet';
+      } else {
+        displayModeState.current = normalized;
+        displayModeState.desktop = normalized;
+      }
+
+      const currentMode = getCurrentDisplayMode();
+      document.body.classList.toggle('display-mode-mac', currentMode === 'mac');
+      document.body.classList.toggle('display-mode-windows', currentMode === 'windows');
+      document.body.classList.toggle('display-mode-tablet', currentMode === 'tablet');
+      document.body.classList.toggle('color-boost-level-2', currentMode === 'windows');
+
+      syncDisplayModeButtons();
+
+      if (save) writeStoredDisplayModeState();
       scheduleWorkspaceRelayout();
+    }
+
+    function toggleDesktopDisplayMode() {
+      const desktopMode = getEffectiveDesktopDisplayMode();
+      applyDisplayMode(desktopMode === 'windows' ? 'mac' : 'windows');
+    }
+
+    function toggleTabletDisplayMode() {
+      const currentMode = getCurrentDisplayMode();
+      applyDisplayMode(currentMode === 'tablet' ? getDesktopDisplayMode() : 'tablet');
+    }
+
+    function applyColorBoost(nextEnabled, { save = true } = {}) {
+      applyDisplayMode(Boolean(nextEnabled) ? 'windows' : 'mac', { save });
     }
 
     function initColorBoostToggle() {
       if (window.__colorBoostBound) return;
       const btn = document.getElementById('color-boost-toggle');
       if (!(btn instanceof HTMLButtonElement)) return;
+      const tabletBtn = document.getElementById('tablet-optimize-toggle');
       window.__colorBoostBound = true;
 
-      let initialEnabled = true;
-      try {
-        const saved = window.localStorage?.getItem(colorBoostStorageKey);
-        if (saved === '1') {
-          initialEnabled = true;
-        } else if (saved === '0') {
-          initialEnabled = false;
-        }
-      } catch (_) {}
-      applyColorBoost(initialEnabled, { save: false });
+      const initialState = readStoredDisplayModeState();
+      displayModeState.current = initialState.current;
+      displayModeState.desktop = initialState.desktop;
+      applyDisplayMode(initialState.current, { save: false });
 
       btn.addEventListener('click', (ev) => {
         ev.preventDefault();
-        applyColorBoost(!colorBoostState.enabled);
+        toggleDesktopDisplayMode();
       });
+      if (tabletBtn instanceof HTMLButtonElement) {
+        tabletBtn.addEventListener('click', (ev) => {
+          ev.preventDefault();
+          toggleTabletDisplayMode();
+        });
+      }
     }
 
     function normalizeScreenDimLevel(rawLevel) {
@@ -32119,7 +32669,9 @@ init();
       resetBound: false,
       visibilityBound: false,
       buttonBound: false,
-      expandBound: false
+      expandBound: false,
+      resizeBound: false,
+      resizeRafId: 0
     };
 
     const todayTopicLineContactFallbackUrl = 'https://line.me/ti/p/48mCjbey9m';
@@ -32565,6 +33117,18 @@ init();
       els.expandBtn.textContent = todayTopicUiState.wordExpanded ? '閉じる' : '全文表示';
       els.wordPanel.classList.toggle('is-expanded', todayTopicUiState.wordExpanded);
       els.wordPopover.hidden = !todayTopicUiState.wordExpanded;
+    }
+
+    function todayTopicScheduleLayoutRefresh() {
+      if (todayTopicUiState.resizeRafId) {
+        window.cancelAnimationFrame(todayTopicUiState.resizeRafId);
+      }
+      todayTopicUiState.resizeRafId = window.requestAnimationFrame(() => {
+        todayTopicUiState.resizeRafId = 0;
+        const els = todayTopicGetElements();
+        if (!els || todayTopicUiState.wordBroken || todayTopicUiState.wordShattering) return;
+        todayTopicUpdateExpandButton(els);
+      });
     }
 
     function todayTopicResolveSecretUrl(label, url) {
@@ -33492,6 +34056,12 @@ init();
         });
       }
 
+      if (!todayTopicUiState.resizeBound) {
+        todayTopicUiState.resizeBound = true;
+        window.addEventListener('resize', todayTopicScheduleLayoutRefresh, { passive: true });
+        window.addEventListener('orientationchange', todayTopicScheduleLayoutRefresh, { passive: true });
+      }
+
       window.setTodayWordEntries = (entries) => {
         const normalized = todayTopicNormalizeWordList(entries);
         todayTopicUiState.words = normalized;
@@ -33534,6 +34104,7 @@ init();
         todayTopicResetBreakState(currentEls);
         todayTopicApplyCard();
       };
+      todayTopicScheduleLayoutRefresh();
       todayTopicUiState.initialized = true;
       todayTopicClearInitRetryTimer();
       return true;
@@ -36813,20 +37384,32 @@ init();
       const names = Array.isArray(source.names)
         ? source.names.map((name) => hygieneStandardizeDisplayName(name || ''))
         : [];
+      const mode = printHistoryResolveHygieneMode(
+        String(source.mode || ''),
+        printHistoryResolveHygieneMode(String(source.modeLabel || ''), 'front')
+      );
       const modeLabel = String(source.modeLabel || '').trim() || '未選択';
-      const dateLabel = String(source.dateLabel || '').trim() || hygieneFormatEmptyDate();
-      const metrics = hygieneBuildPrintDensityMetrics(names.length);
+      const layout = hygieneGetPaperLayout(mode);
+      const labels = hygieneGetDateLabels(mode);
+      const dateIso = String(source.dateIso || '').trim();
+      const dateLabel = String(source.dateLabel || '').trim() || hygieneFormatDate(dateIso);
+      const nextDateLabel = layout === 'double'
+        ? hygieneFormatDate(hygieneShiftIsoDate(dateIso, 1))
+        : hygieneFormatEmptyDate();
+      const layoutDisplay = layout === 'double' ? 'flex' : 'none';
+      const isDoubleLayout = layout === 'double';
+      const metrics = hygieneBuildPrintDensityMetrics(names.length, mode);
       const styleText = [
         `--h-print-scale:${metrics.scale.toFixed(3)}`,
         `--h-print-row-height:${metrics.rowHeightMm.toFixed(2)}mm`,
         `--h-print-row-font:${metrics.rowFontPx.toFixed(1)}px`,
-        '--h-print-cell-pad-y:1px',
-        '--h-print-cell-pad-x:2px',
+        `--h-print-cell-pad-y:${isDoubleLayout ? '2px' : '1px'}`,
+        `--h-print-cell-pad-x:${isDoubleLayout ? '3px' : '2px'}`,
         `--h-print-temp-line-height:${metrics.tempLinePx.toFixed(1)}px`,
         `--h-print-temp-offset-y:${metrics.tempOffsetPx.toFixed(1)}px`,
-        '--h-print-remove-font:7px',
-        '--h-print-remove-pad-y:1px',
-        '--h-print-remove-pad-x:3px',
+        `--h-print-remove-font:${isDoubleLayout ? '8px' : '7px'}`,
+        `--h-print-remove-pad-y:${isDoubleLayout ? '2px' : '1px'}`,
+        `--h-print-remove-pad-x:${isDoubleLayout ? '4px' : '3px'}`,
         `--h-print-head-font:${metrics.headFontPx.toFixed(1)}px`
       ].join(';');
       const rowsHtml = names.length
@@ -36852,36 +37435,65 @@ init();
             </tr>
           `;
       return `
-        <article class="hygiene-paper" style="${styleText}">
+        <article class="hygiene-paper" data-layout="${layout}" style="${styleText}">
           <header class="hygiene-paper-head">
             <h4 class="hygiene-paper-title">衛生チェック記入表</h4>
             <span class="hygiene-mode-badge">${printHistoryEscapeHtml(modeLabel)}</span>
           </header>
-          <div class="hygiene-table-wrap">
-            <table class="hygiene-table" aria-label="衛生チェック記入表">
-              <thead>
-                <tr>
-                  <th class="name-col">名前</th>
-                  <th>下痢／嘔吐／発熱</th>
-                  <th>爪の長さ／マニキュア</th>
-                  <th>指輪／ピアス／時計</th>
-                  <th>手指の怪我／手荒れ</th>
-                  <th class="temp-col">体温</th>
-                </tr>
-              </thead>
-              <tbody>${rowsHtml}</tbody>
-            </table>
-          </div>
-          <footer class="hygiene-paper-foot">
+          <section class="hygiene-day-section hygiene-day-section-primary">
+            <div class="hygiene-table-wrap">
+              <table class="hygiene-table" aria-label="衛生チェック記入表">
+                <thead>
+                  <tr>
+                    <th class="name-col">名前</th>
+                    <th>下痢／嘔吐／発熱</th>
+                    <th>爪の長さ／マニキュア</th>
+                    <th>指輪／ピアス／時計</th>
+                    <th>手指の怪我／手荒れ</th>
+                    <th class="temp-col">体温</th>
+                  </tr>
+                </thead>
+                <tbody>${rowsHtml}</tbody>
+              </table>
+            </div>
+          </section>
+          <section class="hygiene-paper-foot hygiene-paper-foot-mid">
             <div class="hygiene-date-group">
-              <p class="hygiene-foot-label">本日の日付</p>
+              <p class="hygiene-foot-label">${printHistoryEscapeHtml(labels.primary)}</p>
               <p class="hygiene-date-value">${printHistoryEscapeHtml(dateLabel)}</p>
             </div>
             <div class="hygiene-sign-group">
               <p class="hygiene-foot-label">責任者確認欄</p>
               <div class="hygiene-sign-line">印</div>
             </div>
-          </footer>
+          </section>
+          <section class="hygiene-day-section hygiene-day-section-secondary" style="display:${layoutDisplay};">
+            <div class="hygiene-table-wrap">
+              <table class="hygiene-table" aria-label="翌日の衛生チェック記入表">
+                <thead>
+                  <tr>
+                    <th class="name-col">名前</th>
+                    <th>下痢／嘔吐／発熱</th>
+                    <th>爪の長さ／マニキュア</th>
+                    <th>指輪／ピアス／時計</th>
+                    <th>手指の怪我／手荒れ</th>
+                    <th class="temp-col">体温</th>
+                  </tr>
+                </thead>
+                <tbody>${rowsHtml}</tbody>
+              </table>
+            </div>
+          </section>
+          <section class="hygiene-paper-foot hygiene-paper-foot-bottom" style="display:${layoutDisplay};">
+            <div class="hygiene-date-group">
+              <p class="hygiene-foot-label">${printHistoryEscapeHtml(labels.secondary)}</p>
+              <p class="hygiene-date-value">${printHistoryEscapeHtml(nextDateLabel)}</p>
+            </div>
+            <div class="hygiene-sign-group">
+              <p class="hygiene-foot-label">責任者確認欄</p>
+              <div class="hygiene-sign-line">印</div>
+            </div>
+          </section>
         </article>
       `;
     }
@@ -37086,6 +37698,7 @@ init();
 
       const stage = printHistoryBuildStageHtml(item);
       const isCrabCost = item.tool === 'crabcost';
+      const isHygiene = item.tool === 'hygiene';
       const width = isCrabCost ? 1123 : 794;
       const height = isCrabCost ? 794 : 1123;
       let svgUrl = '';
@@ -37105,8 +37718,8 @@ init();
         host.style.zIndex = '-1';
         host.style.pointerEvents = 'none';
         host.style.background = '#ffffff';
-        host.style.width = isCrabCost ? '297mm' : '210mm';
-        host.style.minHeight = isCrabCost ? '210mm' : '297mm';
+        host.style.width = isCrabCost ? '297mm' : (isHygiene ? `${width}px` : '210mm');
+        host.style.minHeight = isCrabCost ? '210mm' : (isHygiene ? `${height}px` : '297mm');
         host.style.padding = '0';
         host.style.margin = '0';
         host.style.boxSizing = 'border-box';
@@ -37114,10 +37727,17 @@ init();
         if (stage.hasSnapshot) host.setAttribute('data-history-print-tool', item.tool);
         document.body.appendChild(host);
 
-        await printHistoryWaitFrame();
-        await printHistoryWaitFrame();
-
         const target = (host.firstElementChild instanceof HTMLElement) ? host.firstElementChild : host;
+        if (isHygiene && target instanceof HTMLElement) {
+          target.style.width = `${width}px`;
+          target.style.minHeight = `${height}px`;
+          target.style.boxSizing = 'border-box';
+        }
+
+        await printHistoryWaitFrame();
+        await printHistoryWaitFrame();
+        if (isHygiene) await printHistoryWaitFrame();
+
         const canvas = await html2canvas(target, {
           backgroundColor: '#ffffff',
           scale: 2,
@@ -38226,7 +38846,7 @@ init();
     const crabCostRuntimePrintStyleId = 'crabcost-runtime-print-style';
     const crabCostDefaultPrintDateIso = '2026-03-16T00:00:00+09:00';
     const crabCostDefaultRows = Object.freeze([
-      Object.freeze({ id: 'raw-cut-2', group: 'main', name: '生切 2', kgPrice: '4280', caseWeight: '5', packCount: '18', packUnit: '株', yieldCount: '10', yieldUnit: 'カン', rankingTarget: true, sortOrder: 1 }),
+      Object.freeze({ id: 'raw-cut-2', group: 'main', name: '生切2L', kgPrice: '4280', caseWeight: '5', packCount: '18', packUnit: '株', yieldCount: '10', yieldUnit: 'カン', rankingTarget: true, sortOrder: 1 }),
       Object.freeze({ id: 'raw-cut-l', group: 'main', name: '生切 加工用L', kgPrice: '3960', caseWeight: '5', packCount: '23', packUnit: '株', yieldCount: '9', yieldUnit: 'カン', rankingTarget: true, sortOrder: 2 }),
       Object.freeze({ id: 'raw-leg-s', group: 'main', name: '生脚 小', kgPrice: '7030', caseWeight: '5', packCount: '170', packUnit: '本', yieldCount: '1', yieldUnit: '本', rankingTarget: true, sortOrder: 3 }),
       Object.freeze({ id: 'raw-taraba-2l', group: 'main', name: '生タラバ2L', kgPrice: '7910', caseWeight: '10', packCount: '12', packUnit: '株', yieldCount: '20', yieldUnit: 'カン', rankingTarget: true, sortOrder: 4 }),
@@ -38274,9 +38894,12 @@ init();
       return crabCostCloneDefaultRows().map((fallback) => {
         const hit = stored.find((row) => String(row?.id || '').trim() === fallback.id) || {};
         const normalizedName = crabCostNormalizeEditableValue(hit.name, fallback.name);
+        const migratedName = fallback.id === 'raw-cut-2' && ['生切 2', '生切2'].includes(normalizedName)
+          ? '生切2L'
+          : normalizedName;
         return {
           ...fallback,
-          name: normalizedName === 'ズワイラ身コロ' ? 'ズワイバラ身コロ' : normalizedName,
+          name: migratedName === 'ズワイラ身コロ' ? 'ズワイバラ身コロ' : migratedName,
           kgPrice: crabCostNormalizeEditableValue(hit.kgPrice, fallback.kgPrice),
           caseWeight: crabCostNormalizeEditableValue(hit.caseWeight, fallback.caseWeight),
           packCount: crabCostNormalizeEditableValue(hit.packCount, fallback.packCount),
@@ -40217,7 +40840,7 @@ init();
     }
 
     function docsResolveExternalPlatformMode() {
-      return document.body.classList.contains('color-boost-level-2') ? 'mac' : 'windows';
+      return isWindowsDisplayMode() ? 'mac' : 'windows';
     }
 
     function docsNudgeExternalViewport() {
@@ -40225,7 +40848,7 @@ init();
       if (!externalEls) return false;
       const frameWindow = externalEls.frame.contentWindow;
       if (!frameWindow) return false;
-      const isWindowsOptimized = document.body.classList.contains('color-boost-level-2');
+      const isWindowsOptimized = isWindowsDisplayMode();
       let touched = false;
       try {
         frameWindow.dispatchEvent(new Event('resize'));
@@ -43824,25 +44447,63 @@ init();
       },
       afterPrintBound: false
     };
-    const hygienePrintLayout = Object.freeze({
-      printableHeightMm: 274,
-      fixedHeightMm: 82,
-      rowHeightMm: 6.82,
-      maxRowsBonus: 7,
-      rowFontPx: 9.8,
-      headFontPx: 8.8,
-      tempLinePx: 8.8,
-      tempOffsetPx: 1.2
+    const hygieneModeConfigs = Object.freeze({
+      front: Object.freeze({
+        paperLayout: 'single',
+        maxRows: 35,
+        primaryDateLabel: '本日の日付',
+        secondaryDateLabel: '',
+        printMetrics: Object.freeze({
+          rowHeightMm: 6.82,
+          rowFontPx: 9.8,
+          headFontPx: 8.8,
+          tempLinePx: 8.8,
+          tempOffsetPx: 1.2
+        })
+      }),
+      kitchen: Object.freeze({
+        paperLayout: 'double',
+        maxRows: 24,
+        primaryDateLabel: '日付',
+        secondaryDateLabel: '翌日の日付',
+        printMetrics: Object.freeze({
+          rowHeightMm: 4.4,
+          rowFontPx: 7.2,
+          headFontPx: 6.6,
+          tempLinePx: 8.4,
+          tempOffsetPx: 0.4
+        })
+      })
     });
-    const hygieneMaxSelectableRows = 35;
-    const hygienePrintLimitToast = `これ以上追加できません（上限${hygieneMaxSelectableRows}名）`;
 
-    function hygieneGetCapacityState(countRaw = hygieneGetRows().length) {
+    function hygieneGetModeConfig(mode = hygieneState.mode) {
+      const resolvedMode = hygieneResolveMode(mode) || 'front';
+      return hygieneModeConfigs[resolvedMode] || hygieneModeConfigs.front;
+    }
+
+    function hygieneGetPaperLayout(mode = hygieneState.mode) {
+      return hygieneGetModeConfig(mode).paperLayout || 'single';
+    }
+
+    function hygieneGetMaxSelectableRows(mode = hygieneState.mode) {
+      return Math.max(1, Number(hygieneGetModeConfig(mode).maxRows) || 35);
+    }
+
+    function hygieneGetPrintLimitToast(mode = hygieneState.mode) {
+      return `これ以上追加できません（上限${hygieneGetMaxSelectableRows(mode)}名）`;
+    }
+
+    function hygieneGetDateLabels(mode = hygieneState.mode) {
+      const config = hygieneGetModeConfig(mode);
+      return {
+        primary: String(config.primaryDateLabel || '本日の日付'),
+        secondary: String(config.secondaryDateLabel || '')
+      };
+    }
+
+    function hygieneGetCapacityState(countRaw = hygieneGetRows().length, mode = hygieneState.mode) {
       const count = Math.max(0, Number(countRaw) || 0);
-      const maxRows = Math.min(
-        hygieneBuildPrintDensityMetrics(Math.max(1, count)).maxRows,
-        hygieneMaxSelectableRows
-      );
+      const maxRows = hygieneGetMaxSelectableRows(mode);
       const remaining = Math.max(0, maxRows - count);
       return {
         count,
@@ -43899,6 +44560,51 @@ init();
       const week = ['日', '月', '火', '水', '木', '金', '土'];
       const weekday = week[dateObj.getDay()] || '-';
       return `${year}年${month}月${day}日（${weekday}）`;
+    }
+
+    function hygieneShiftIsoDate(isoDate, dayDelta = 0) {
+      const m = String(isoDate || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (!m) return '';
+      const year = Number(m[1]);
+      const month = Number(m[2]);
+      const day = Number(m[3]);
+      if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return '';
+      const dateObj = new Date(year, month - 1, day + (Number(dayDelta) || 0));
+      return [
+        dateObj.getFullYear(),
+        String(dateObj.getMonth() + 1).padStart(2, '0'),
+        String(dateObj.getDate()).padStart(2, '0')
+      ].join('-');
+    }
+
+    function hygieneTrimModeStateToCapacity(mode = hygieneState.mode) {
+      const resolvedMode = hygieneResolveMode(mode);
+      if (!resolvedMode) return false;
+      const modeState = hygieneGetModeState(resolvedMode);
+      const maxRows = hygieneGetMaxSelectableRows(resolvedMode);
+      const nextSelectedPresetIds = new Set();
+      let changed = false;
+
+      modeState.presetEntries.forEach((entry) => {
+        if (!modeState.selectedPresetIds.has(entry.id)) return;
+        if (nextSelectedPresetIds.size >= maxRows) {
+          changed = true;
+          return;
+        }
+        nextSelectedPresetIds.add(entry.id);
+      });
+
+      if (nextSelectedPresetIds.size !== modeState.selectedPresetIds.size) {
+        modeState.selectedPresetIds = nextSelectedPresetIds;
+      }
+
+      const remainingSlots = Math.max(0, maxRows - modeState.selectedPresetIds.size);
+      if (modeState.freeRows.length > remainingSlots) {
+        modeState.freeRows = modeState.freeRows.slice(0, remainingSlots);
+        changed = true;
+      }
+
+      return changed;
     }
 
     function hygieneLoadFreeHistory(mode = hygieneState.mode) {
@@ -44012,18 +44718,19 @@ init();
       });
     }
 
-    function hygieneApplyRowDensity(_count) {
+    function hygieneApplyRowDensity(countRaw) {
       const paper = document.getElementById('hygiene-paper');
       if (!(paper instanceof HTMLElement)) return;
-      const rowHeight = 48;
-      const rowFont = 12;
-      const cellPadY = 4;
-      const cellPadX = 4;
-      const tempLineHeight = 11;
-      const removeFont = 9;
-      const removePadY = 1;
-      const removePadX = 5;
-      const headFont = 10;
+      const isDoubleLayout = hygieneGetPaperLayout() === 'double';
+      const rowHeight = isDoubleLayout ? 68 : 48;
+      const rowFont = isDoubleLayout ? 12 : 12;
+      const cellPadY = isDoubleLayout ? 8 : 4;
+      const cellPadX = isDoubleLayout ? 6 : 4;
+      const tempLineHeight = isDoubleLayout ? 20 : 11;
+      const removeFont = isDoubleLayout ? 10 : 9;
+      const removePadY = isDoubleLayout ? 2 : 1;
+      const removePadX = isDoubleLayout ? 6 : 5;
+      const headFont = isDoubleLayout ? 10 : 10;
       paper.style.setProperty('--h-row-height', `${rowHeight}px`);
       paper.style.setProperty('--h-row-font', `${rowFont}px`);
       paper.style.setProperty('--h-cell-pad-y', `${cellPadY}px`);
@@ -44033,6 +44740,18 @@ init();
       paper.style.setProperty('--h-remove-pad-y', `${removePadY}px`);
       paper.style.setProperty('--h-remove-pad-x', `${removePadX}px`);
       paper.style.setProperty('--h-head-font', `${headFont}px`);
+
+      const printMetrics = hygieneBuildPrintDensityMetrics(countRaw);
+      paper.style.setProperty('--h-print-row-height', `${printMetrics.rowHeightMm.toFixed(2)}mm`);
+      paper.style.setProperty('--h-print-row-font', `${printMetrics.rowFontPx.toFixed(1)}px`);
+      paper.style.setProperty('--h-print-cell-pad-y', isDoubleLayout ? '2px' : '1px');
+      paper.style.setProperty('--h-print-cell-pad-x', isDoubleLayout ? '3px' : '2px');
+      paper.style.setProperty('--h-print-temp-line-height', `${printMetrics.tempLinePx.toFixed(1)}px`);
+      paper.style.setProperty('--h-print-temp-offset-y', `${printMetrics.tempOffsetPx.toFixed(1)}px`);
+      paper.style.setProperty('--h-print-remove-font', isDoubleLayout ? '8px' : '7px');
+      paper.style.setProperty('--h-print-remove-pad-y', isDoubleLayout ? '2px' : '1px');
+      paper.style.setProperty('--h-print-remove-pad-x', isDoubleLayout ? '4px' : '3px');
+      paper.style.setProperty('--h-print-head-font', `${printMetrics.headFontPx.toFixed(1)}px`);
     }
 
     function hygieneRenderModeState() {
@@ -44049,10 +44768,38 @@ init();
       hygieneSyncModeFishPlayback();
     }
 
+    function hygieneRenderPaperLayout() {
+      const paper = document.getElementById('hygiene-paper');
+      const dateLabel = document.getElementById('hygiene-date-label');
+      const nextDateLabel = document.getElementById('hygiene-next-date-label');
+      const layout = hygieneGetPaperLayout();
+      const labels = hygieneGetDateLabels();
+      if (paper instanceof HTMLElement) {
+        paper.dataset.layout = layout;
+        const secondarySection = paper.querySelector('.hygiene-day-section-secondary');
+        const bottomFoot = paper.querySelector('.hygiene-paper-foot-bottom');
+        if (secondarySection instanceof HTMLElement) {
+          secondarySection.style.display = layout === 'double' ? 'flex' : 'none';
+        }
+        if (bottomFoot instanceof HTMLElement) {
+          bottomFoot.style.display = layout === 'double' ? 'flex' : 'none';
+        }
+      }
+      if (dateLabel instanceof HTMLElement) {
+        dateLabel.textContent = labels.primary;
+      }
+      if (nextDateLabel instanceof HTMLElement) {
+        nextDateLabel.textContent = labels.secondary;
+      }
+    }
+
     function hygieneRenderDate() {
       const dateText = document.getElementById('hygiene-date-text');
+      const nextDateText = document.getElementById('hygiene-next-date-text');
       const dateInput = document.getElementById('hygiene-date-input');
+      const nextDateIso = hygieneShiftIsoDate(hygieneState.dateIso, 1);
       if (dateText instanceof HTMLElement) dateText.textContent = hygieneFormatDate(hygieneState.dateIso);
+      if (nextDateText instanceof HTMLElement) nextDateText.textContent = hygieneFormatDate(nextDateIso);
       if (dateInput instanceof HTMLInputElement) dateInput.value = hygieneState.dateIso || '';
     }
 
@@ -44121,7 +44868,7 @@ init();
       const { maxRows } = hygieneGetCapacityState(nextCount);
       if (nextCount <= maxRows) return true;
       if (announce && typeof showToast === 'function') {
-        showToast(hygienePrintLimitToast);
+        showToast(hygieneGetPrintLimitToast());
       }
       return false;
     }
@@ -44140,20 +44887,62 @@ init();
       const modeState = hygieneGetModeState();
       const { atLimit } = hygieneGetCapacityState();
       const warn = atLimit;
-      alertEl.textContent = hygienePrintLimitToast;
+      alertEl.textContent = hygieneGetPrintLimitToast();
       alertEl.classList.toggle('hidden', !warn);
       if (warn && !modeState.printLimitAlertShown && typeof showToast === 'function') {
-        showToast(hygienePrintLimitToast);
+        showToast(hygieneGetPrintLimitToast());
       }
       modeState.printLimitAlertShown = warn;
     }
 
-    function hygieneRenderTable() {
-      const body = document.getElementById('hygiene-table-body');
+    function hygieneBuildTableRow(row) {
+      const tr = document.createElement('tr');
+
+      const nameTd = document.createElement('td');
+      nameTd.className = 'name-col';
+      const nameWrap = document.createElement('div');
+      nameWrap.className = 'hygiene-name-cell';
+
+      const nameInput = document.createElement('input');
+      nameInput.type = 'text';
+      nameInput.className = 'focusable hygiene-row-name-input';
+      nameInput.value = row.name;
+      nameInput.dataset.rowType = row.type;
+      nameInput.dataset.rowId = row.id;
+      nameInput.setAttribute('aria-label', '人物名');
+
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'clickable hygiene-row-remove';
+      removeBtn.dataset.rowType = row.type;
+      removeBtn.dataset.rowId = row.id;
+      removeBtn.textContent = '削除';
+
+      nameWrap.appendChild(nameInput);
+      nameWrap.appendChild(removeBtn);
+      nameTd.appendChild(nameWrap);
+      tr.appendChild(nameTd);
+
+      for (let i = 0; i < 4; i += 1) {
+        const td = document.createElement('td');
+        td.className = 'hygiene-check-cell';
+        tr.appendChild(td);
+      }
+
+      const tempTd = document.createElement('td');
+      tempTd.className = 'temp-col';
+      const tempLine = document.createElement('div');
+      tempLine.className = 'hygiene-temp-line';
+      tempLine.textContent = '℃';
+      tempTd.appendChild(tempLine);
+      tr.appendChild(tempTd);
+
+      return tr;
+    }
+
+    function hygieneFillTableBody(body, rows) {
       if (!(body instanceof HTMLElement)) return;
       body.innerHTML = '';
-      const rows = hygieneGetRows();
-      hygieneApplyRowDensity(rows.length);
 
       if (!rows.length) {
         const tr = document.createElement('tr');
@@ -44167,52 +44956,24 @@ init();
       }
 
       rows.forEach((row) => {
-        const tr = document.createElement('tr');
-
-        const nameTd = document.createElement('td');
-        nameTd.className = 'name-col';
-        const nameWrap = document.createElement('div');
-        nameWrap.className = 'hygiene-name-cell';
-
-        const nameInput = document.createElement('input');
-        nameInput.type = 'text';
-        nameInput.className = 'focusable hygiene-row-name-input';
-        nameInput.value = row.name;
-        nameInput.dataset.rowType = row.type;
-        nameInput.dataset.rowId = row.id;
-        nameInput.setAttribute('aria-label', '人物名');
-
-        const removeBtn = document.createElement('button');
-        removeBtn.type = 'button';
-        removeBtn.className = 'clickable hygiene-row-remove';
-        removeBtn.dataset.rowType = row.type;
-        removeBtn.dataset.rowId = row.id;
-        removeBtn.textContent = '削除';
-
-        nameWrap.appendChild(nameInput);
-        nameWrap.appendChild(removeBtn);
-        nameTd.appendChild(nameWrap);
-        tr.appendChild(nameTd);
-
-        for (let i = 0; i < 4; i += 1) {
-          const td = document.createElement('td');
-          td.className = 'hygiene-check-cell';
-          tr.appendChild(td);
-        }
-
-        const tempTd = document.createElement('td');
-        tempTd.className = 'temp-col';
-        const tempLine = document.createElement('div');
-        tempLine.className = 'hygiene-temp-line';
-        tempLine.textContent = '℃';
-        tempTd.appendChild(tempLine);
-        tr.appendChild(tempTd);
-        body.appendChild(tr);
+        body.appendChild(hygieneBuildTableRow(row));
       });
     }
 
+    function hygieneRenderTable() {
+      const mainBody = document.getElementById('hygiene-table-body-main');
+      const nextBody = document.getElementById('hygiene-table-body-next');
+      if (!(mainBody instanceof HTMLElement) || !(nextBody instanceof HTMLElement)) return;
+      const rows = hygieneGetRows();
+      hygieneApplyRowDensity(rows.length);
+      hygieneFillTableBody(mainBody, rows);
+      hygieneFillTableBody(nextBody, rows);
+    }
+
     function hygieneRenderAll() {
+      hygieneTrimModeStateToCapacity(hygieneState.mode);
       hygieneRenderModeState();
+      hygieneRenderPaperLayout();
       hygieneRenderDate();
       hygieneRenderCandidateList();
       hygieneRenderHistoryList();
@@ -46419,19 +47180,15 @@ init();
       hygieneSyncModeFishPlayback();
     }
 
-    function hygieneBuildPrintDensityMetrics(countRaw) {
+    function hygieneBuildPrintDensityMetrics(countRaw, mode = hygieneState.mode) {
       const count = Math.max(1, Number(countRaw) || 0);
-      const printableHeightMm = hygienePrintLayout.printableHeightMm;
-      const fixedHeightMm = hygienePrintLayout.fixedHeightMm;
-      const rowHeightMm = hygienePrintLayout.rowHeightMm;
-      const maxRowsBonus = Math.max(0, Math.floor(Number(hygienePrintLayout.maxRowsBonus) || 0));
-      const rowFontPx = hygienePrintLayout.rowFontPx;
-      const headFontPx = hygienePrintLayout.headFontPx;
-      const tempLinePx = hygienePrintLayout.tempLinePx;
-      const tempOffsetPx = hygienePrintLayout.tempOffsetPx;
-      const availableMm = Math.max(0, printableHeightMm - fixedHeightMm);
-      const baseMaxRows = Math.max(1, Math.floor(availableMm / rowHeightMm));
-      const maxRows = baseMaxRows + maxRowsBonus;
+      const metrics = hygieneGetModeConfig(mode).printMetrics || hygieneGetModeConfig('front').printMetrics;
+      const rowHeightMm = Number(metrics.rowHeightMm) || 6.82;
+      const rowFontPx = Number(metrics.rowFontPx) || 9.8;
+      const headFontPx = Number(metrics.headFontPx) || 8.8;
+      const tempLinePx = Number(metrics.tempLinePx) || 8.8;
+      const tempOffsetPx = Number(metrics.tempOffsetPx) || 1.2;
+      const maxRows = hygieneGetMaxSelectableRows(mode);
       return { rowHeightMm, rowFontPx, headFontPx, tempLinePx, tempOffsetPx, scale: 1, maxRows, count };
     }
 
@@ -46615,7 +47372,7 @@ init();
               return;
             }
             if (result.limitReached) {
-              showToast(hygienePrintLimitToast);
+              showToast(hygieneGetPrintLimitToast());
               return;
             }
             showToast('追加できる入力履歴がありません。');
@@ -46644,8 +47401,12 @@ init();
           });
         }
 
-        const tableBody = document.getElementById('hygiene-table-body');
-        if (tableBody instanceof HTMLElement) {
+        const tableBodies = [
+          document.getElementById('hygiene-table-body-main'),
+          document.getElementById('hygiene-table-body-next')
+        ];
+        tableBodies.forEach((tableBody) => {
+          if (!(tableBody instanceof HTMLElement)) return;
           tableBody.addEventListener('click', (event) => {
             const btn = event.target instanceof HTMLElement ? event.target.closest('.hygiene-row-remove') : null;
             if (!(btn instanceof HTMLElement)) return;
@@ -46670,7 +47431,7 @@ init();
             event.preventDefault();
             input.blur();
           });
-        }
+        });
 
         if (!hygieneState.afterPrintBound) {
           hygieneState.afterPrintBound = true;
@@ -47320,7 +48081,7 @@ init();
       return /windows/i.test(platform) || /windows/i.test(ua);
     }
     function isWindowsOptimizationActive() {
-      return document.body?.classList.contains('color-boost-level-2') === true;
+      return isWindowsDisplayMode();
     }
     function shouldRunWindowsMailLaunchGuard() {
       return isWindowsOptimizationActive();
@@ -48248,6 +49009,24 @@ init();
       return trimmed;
     }
 
+    function mailEnsureAddressHistoryEntry(storageKey, value, { atFront = false } = {}) {
+      const normalized = mailNormalizeAddressValue(value);
+      if (!normalized) return mailReadAddressHistory(storageKey);
+      const addresses = mailSplitAddressList(normalized);
+      if (!addresses.length) return mailReadAddressHistory(storageKey);
+      const packed = addresses.join(', ');
+      const key = mailAddressComparable(packed);
+      if (!key) return mailReadAddressHistory(storageKey);
+      const next = mailReadAddressHistory(storageKey);
+      if (next.some((item) => mailAddressComparable(item) === key)) return next;
+      if (atFront) {
+        next.unshift(packed);
+      } else {
+        next.push(packed);
+      }
+      return mailWriteAddressHistory(storageKey, next);
+    }
+
     function mailAddAddressHistory(storageKey, value) {
       const normalized = mailNormalizeAddressValue(value);
       if (!normalized) return mailReadAddressHistory(storageKey);
@@ -48567,7 +49346,7 @@ init();
         return { readOnly: true, value: 'k.sakatani@douraku.co.jp' };
       }
       if (mailState.category === 'uniform') {
-        return { readOnly: true, value: 'k.yoshida@aramark-uniform.co.jp' };
+        return { readOnly: true, value: mailUniformPresetTo };
       }
       if (mailState.category === 'shiftShare') {
         return { readOnly: true, value: 'sannomiya@douraku.co.jp, douraku0880@icloud.com' };
@@ -48608,6 +49387,22 @@ init();
     function mailWriteBccCheckedStateStore(nextStore) {
       const safeStore = (nextStore && typeof nextStore === 'object' && !Array.isArray(nextStore)) ? nextStore : {};
       return storageWriteJSON(mailBccCheckedStateStorageKey, safeStore);
+    }
+
+    function mailPatchStoredBccCheckedState(category = mailState.category, entries = {}) {
+      const key = String(category || '').trim();
+      if (!key || !entries || typeof entries !== 'object' || Array.isArray(entries)) return false;
+      const store = mailReadBccCheckedStateStore();
+      const current = (store[key] && typeof store[key] === 'object' && !Array.isArray(store[key]))
+        ? { ...store[key] }
+        : {};
+      Object.entries(entries).forEach(([mailKey, checked]) => {
+        const normalizedKey = mailAddressComparable(mailKey);
+        if (!normalizedKey) return;
+        current[normalizedKey] = !!checked;
+      });
+      store[key] = current;
+      return mailWriteBccCheckedStateStore(store);
     }
 
     function mailGetStoredBccCheckedMap(category = mailState.category) {
@@ -49155,6 +49950,7 @@ init();
           { mail: 'sannomiya@douraku.co.jp', label: '神戸三宮店PC', checked: true },
           { mail: 't.kawauchi@douraku.co.jp', label: '川内店長', checked: true },
           { mail: 'cherry-blossom-princess@docomo.ne.jp', label: '古河', checked: true },
+          { ...mailTakadaBccEntry },
           { mail: 'douraku0880@icloud.com', label: 'タブレット', checked: true },
           { mail: 'ta.bear.415.kani@gmail.com', label: '西川副主任', checked: false }
         ];
@@ -49197,14 +49993,17 @@ init();
 
       if (mailState.category === 'uniform') {
         to.readOnly = true;
-        to.value = 'k.yoshida@aramark-uniform.co.jp';
+        to.value = mailUniformPresetTo;
         subject.value = '白衣発注の件';
-        bccItems = [
-          { mail: 't.ueno@aramark-uniform.co.jp', checked: true },
-          { mail: 'k.takayama@aramark-uniform.co.jp', checked: true }
-        ];
+        bccItems = mailUniformBccItems.map((entry) => ({ ...entry }));
+        mailPatchStoredBccCheckedState('uniform', {
+          't.ueno@weara.co.jp': true,
+          'k.takayama@weara.co.jp': true,
+          't.ueno@aramark-uniform.co.jp': false,
+          'k.takayama@aramark-uniform.co.jp': false
+        });
         if (!keepBodyIfEditing) {
-          body.value = appendMailSignatureBlock('株式会社アラマーク\n\n吉田 寛汰 様\n上野 貴子 様\n高山 和馬 様\n\nお世話になっております。\n\n白衣の件でご連絡いたしました。\n\n添付データのとおり、退職者の反映および新規白衣発注を含めた最新版に更新しております。\n\nお手すきの際にご確認のうえ、随時ご対応いただけますと幸いです。\n\nなお、添付リストに記載のない人物の白衣は廃止として問題ございません。\n\nお忙しいところ恐れ入りますが、引き続きよろしくお願いいたします。');
+          body.value = appendMailSignatureBlock(mailUniformBody);
         }
       }
 
@@ -49214,11 +50013,12 @@ init();
         subject.value = 'シフトの共有';
         bccItems = [
           { mail: 'cherry-blossom-princess@docomo.ne.jp', label: '古河', checked: true },
+          { ...mailTakadaBccEntry },
           { mail: 't.kawauchi@douraku.co.jp', label: '川内店長', checked: true },
           { mail: 'ta.bear.415.kani@gmail.com', label: '西川副主任', checked: true }
         ];
         if (!keepBodyIfEditing) {
-          body.value = appendMailSignatureBlock('大変お待たせいたしました。\n\n調理場シフトが完成しましたので、取り急ぎ画像を共有いたします。\n\n今後、変更が入った場合は、改めてメールでご連絡いたしますので、よろしくお願いいたします。\n\nご質問やお気づきの点がございましたら、調理役職者までお声がけください。\n\n以上、よろしくお願いいたします。');
+          body.value = appendMailSignatureBlock('大変お待たせいたしました。\n\n調理場シフトが完成しましたので、取り急ぎ画像を共有いたします。\n\n今後、変更が入った場合は、改めてメールでご連絡いたしますので、よろしくお願いいたします。\n\nご質問やお気づきの点がございましたら、調理役職者までお声がけください。\n\n以上、よろしくお願いいたします。', { spacing: '\n\n\n\n' });
         }
       }
 
@@ -49741,6 +50541,7 @@ init();
       initMailStorePresetModal();
       initStoreSyncStateFromStorage();
       restoreMailStoreSuffixFromStorage();
+      mailEnsureAddressHistoryEntry(mailToHistoryStorageKey, mailUniformLegacyTo);
       renderMailStoreSuffixCurrent();
       renderStoreSuffixLockState();
       bindMailStoreSuffixEditor();
@@ -54916,8 +55717,8 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         {
           title: '【ツール内のボタンについて】',
           text:
-`・画面下（下側ヘッダー）に「操作音オン/オフ」「Mac用に最適化」「Windows用に最適化」があります。
-　音を出したくない場合は操作音をオフ、表示が見づらい場合は最適化を切り替えてください。
+`・画面下（下側ヘッダー）に「操作音オン/オフ」「タブレットに最適化」「Mac用に最適化 / Windows用に最適化」があります。
+　iPadなどで全体をしっかり縮小したい場合は「タブレットに最適化」、表示が見づらい場合はMac / Windowsの最適化を切り替えてください。
 
 ・各ツール内の左上に「拡大表示」があります。
 　小さく見えづらい場合はこちらの機能を活用してください。`
