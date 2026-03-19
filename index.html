@@ -32,7 +32,7 @@
       --screen-dim-overlay-opacity-dark: 0.34;
       --screen-dim-overlay-opacity: 0;
       --workspace-screen-zoom: .92;
-      --workspace-tablet-zoom: .58;
+      --workspace-tablet-zoom: .54;
     }
 
     html {
@@ -1712,10 +1712,10 @@
         --workspace-screen-zoom:1;
       }
       body.display-mode-tablet{
-        --workspace-screen-zoom:var(--workspace-tablet-zoom, .58);
+        --workspace-screen-zoom:var(--workspace-tablet-zoom, .54);
       }
       body.display-mode-tablet #tool-tab-bar{
-        zoom:var(--workspace-tablet-zoom, .58);
+        zoom:var(--workspace-tablet-zoom, .54);
       }
       body.tool-focus-mode{
         --workspace-screen-zoom:1;
@@ -1884,6 +1884,7 @@
     #tool-tab-bar{
       display:flex;
       flex-wrap:nowrap;
+      gap:3px;
       overflow-x:auto;
       overflow-y:hidden;
       -webkit-overflow-scrolling:touch;
@@ -1894,7 +1895,7 @@
     #floating-tool-tab-bar .tab-btn{
       flex:0 0 auto;
       white-space:nowrap;
-      padding:0.75rem 1.35rem;
+      padding:0.75rem 0.92rem;
       font-size:0.95rem;
       letter-spacing:-0.01em;
     }
@@ -1995,7 +1996,7 @@
     }
     #floating-tool-tab-bar .floating-tool-tab-inner{
       display:flex;
-      gap:4px;
+      gap:3px;
       width:max-content;
       max-width:calc(100vw - 24px);
       margin:0 auto;
@@ -11464,6 +11465,12 @@
     justify-content:center;
     margin: 14px 0 2px;
   }
+  .login-passcode-entry{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+  }
   .login-pin-dots{
     display:flex;
     align-items:center;
@@ -11492,6 +11499,50 @@
     height:100%;
     opacity:0;
     pointer-events:auto;
+  }
+  #login-gate[data-mobile-passcode="1"] #login-passcode{
+    pointer-events:none;
+  }
+  .login-passcode-pad{
+    width:min(100%, 280px);
+  }
+  .login-passcode-pad-grid{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:10px;
+  }
+  .login-passcode-pad-btn{
+    min-height:54px;
+    border-radius:14px;
+    border:1px solid rgba(148,163,184,.42);
+    background:linear-gradient(180deg, #ffffff 0%, #e2e8f0 100%);
+    color:#0f172a;
+    font-size:22px;
+    font-weight:900;
+    box-shadow:0 10px 18px rgba(15,23,42,.12);
+    transition:transform .12s ease, box-shadow .16s ease, filter .16s ease;
+    touch-action:manipulation;
+  }
+  .login-passcode-pad-btn:hover{
+    box-shadow:0 12px 22px rgba(15,23,42,.16);
+    filter:brightness(1.01);
+  }
+  .login-passcode-pad-btn:active{
+    transform:translateY(1px) scale(.985);
+  }
+  .login-passcode-pad-btn.is-action{
+    font-size:18px;
+    background:linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+    color:#1d4ed8;
+    border-color:rgba(96,165,250,.44);
+  }
+  .login-passcode-pad-note{
+    margin:10px 2px 0;
+    text-align:center;
+    font-size:11px;
+    line-height:1.55;
+    font-weight:700;
+    color:#475569;
   }
   .login-gate-note{
     margin:10px 2px 0;
@@ -12915,17 +12966,36 @@
           <button id="login-board-back-btn" type="button" class="clickable login-board-back-btn">パスコード入力に戻る</button>
         </div>
       </div>
-      <div class="login-gate-panel" id="login-panel">
+        <div class="login-gate-panel" id="login-panel">
         <p class="login-gate-badge">起動ロック</p>
         <h1 id="login-title" class="login-gate-title">4桁パスコード</h1>
-        <div class="login-pin-wrap" aria-live="polite">
-          <div id="login-pin-dots" class="login-pin-dots" aria-hidden="true">
-            <span class="login-pin-dot"></span>
-            <span class="login-pin-dot"></span>
-            <span class="login-pin-dot"></span>
-            <span class="login-pin-dot"></span>
+        <div id="login-passcode-entry" class="login-passcode-entry">
+          <div class="login-pin-wrap" aria-live="polite">
+            <div id="login-pin-dots" class="login-pin-dots" aria-hidden="true">
+              <span class="login-pin-dot"></span>
+              <span class="login-pin-dot"></span>
+              <span class="login-pin-dot"></span>
+              <span class="login-pin-dot"></span>
+            </div>
+            <input id="login-passcode" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="one-time-code" aria-label="4桁パスコード" />
           </div>
-          <input id="login-passcode" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="one-time-code" aria-label="4桁パスコード" />
+          <div id="login-passcode-pad" class="login-passcode-pad hidden" role="group" aria-label="数字パッド" aria-hidden="true">
+            <div class="login-passcode-pad-grid">
+              <button type="button" class="clickable login-passcode-pad-btn" data-login-passcode-digit="1">1</button>
+              <button type="button" class="clickable login-passcode-pad-btn" data-login-passcode-digit="2">2</button>
+              <button type="button" class="clickable login-passcode-pad-btn" data-login-passcode-digit="3">3</button>
+              <button type="button" class="clickable login-passcode-pad-btn" data-login-passcode-digit="4">4</button>
+              <button type="button" class="clickable login-passcode-pad-btn" data-login-passcode-digit="5">5</button>
+              <button type="button" class="clickable login-passcode-pad-btn" data-login-passcode-digit="6">6</button>
+              <button type="button" class="clickable login-passcode-pad-btn" data-login-passcode-digit="7">7</button>
+              <button type="button" class="clickable login-passcode-pad-btn" data-login-passcode-digit="8">8</button>
+              <button type="button" class="clickable login-passcode-pad-btn" data-login-passcode-digit="9">9</button>
+              <button type="button" class="clickable login-passcode-pad-btn is-action" data-login-passcode-action="clear">C</button>
+              <button type="button" class="clickable login-passcode-pad-btn" data-login-passcode-digit="0">0</button>
+              <button type="button" class="clickable login-passcode-pad-btn is-action" data-login-passcode-action="backspace" aria-label="1文字削除">⌫</button>
+            </div>
+            <p class="login-passcode-pad-note">スマートフォン / タブレットでは、画面内の数字キーから入力できます。</p>
+          </div>
         </div>
         <p class="login-gate-note">※一度ログインすると30分間はパスコード入力不要です
 ※30分経過後は再入力が必要です</p>
@@ -27970,6 +28040,11 @@ init();
     const mailTakadaBccEntry = Object.freeze({
       mail: 'maa._.p--luv--yp_skc--u3u--yui@docomo.ne.jp',
       label: '髙田',
+      checked: true
+    });
+    const mailKawabeBccEntry = Object.freeze({
+      mail: 'nimblework@docomo.ne.jp',
+      label: '川辺',
       checked: true
     });
     const storeSyncState = {
@@ -49950,7 +50025,8 @@ init();
           { mail: 'sannomiya@douraku.co.jp', label: '神戸三宮店PC', checked: true },
           { mail: 't.kawauchi@douraku.co.jp', label: '川内店長', checked: true },
           { mail: 'cherry-blossom-princess@docomo.ne.jp', label: '古河', checked: true },
-          { ...mailTakadaBccEntry },
+          { ...mailTakadaBccEntry, checked: false },
+          { ...mailKawabeBccEntry, checked: false },
           { mail: 'douraku0880@icloud.com', label: 'タブレット', checked: true },
           { mail: 'ta.bear.415.kani@gmail.com', label: '西川副主任', checked: false }
         ];
@@ -50014,6 +50090,7 @@ init();
         bccItems = [
           { mail: 'cherry-blossom-princess@docomo.ne.jp', label: '古河', checked: true },
           { ...mailTakadaBccEntry },
+          { ...mailKawabeBccEntry },
           { mail: 't.kawauchi@douraku.co.jp', label: '川内店長', checked: true },
           { mail: 'ta.bear.415.kani@gmail.com', label: '西川副主任', checked: true }
         ];
@@ -54777,6 +54854,10 @@ window.collectPrintDiagnostics = function(stage){
       initLoginBoard();
       const modal = document.getElementById('login-board-history-modal');
       if (!(modal instanceof HTMLElement)) return;
+      const boardInput = document.getElementById('login-board-input');
+      if (boardInput instanceof HTMLTextAreaElement) {
+        try { boardInput.blur(); } catch (_) {}
+      }
       loginBoardRenderHistoryList();
       modal.classList.remove('hidden');
       modal.setAttribute('aria-hidden', 'false');
@@ -55655,6 +55736,9 @@ window.collectPrintDiagnostics = function(stage){
       const boardHistoryBtn = document.getElementById('login-board-history-btn');
       const panel = document.getElementById('login-panel') || gate?.querySelector('.login-gate-panel');
       const input = document.getElementById('login-passcode');
+      const passcodeEntry = document.getElementById('login-passcode-entry');
+      const passcodePad = document.getElementById('login-passcode-pad');
+      const passcodePadButtons = Array.from(passcodePad?.querySelectorAll('[data-login-passcode-digit], [data-login-passcode-action]') || []);
       const message = document.getElementById('login-message');
       const dots = Array.from(document.querySelectorAll('#login-pin-dots .login-pin-dot'));
       const bugLayer = document.getElementById('login-bug-layer');
@@ -55758,6 +55842,7 @@ Macに近い表示になり、ツール全体が見やすくなります。`
       let unlocked = false;
       let resetTimer = null;
       let pinBuffer = '';
+      let useInAppPasscodePad = false;
       let rejectAnimating = false;
       let attemptCount = 0;
       let prankRunning = false;
@@ -56211,11 +56296,84 @@ Macに近い表示になり、ツール全体が見やすくなります。`
       gate.classList.remove('is-unlocked');
       gate.removeAttribute('aria-hidden');
 
+      const isProbablyTouchMobileDevice = () => {
+        const ua = String(window.navigator?.userAgent || '');
+        const touchPoints = Number(window.navigator?.maxTouchPoints || 0);
+        const matchMedia = typeof window.matchMedia === 'function' ? window.matchMedia.bind(window) : null;
+        const coarsePointer = !!(
+          matchMedia?.('(pointer: coarse)')?.matches ||
+          matchMedia?.('(any-pointer: coarse)')?.matches
+        );
+        const shortSide = Math.min(
+          window.innerWidth || window.screen?.width || 0,
+          window.innerHeight || window.screen?.height || 0
+        );
+        const longSide = Math.max(
+          window.innerWidth || window.screen?.width || 0,
+          window.innerHeight || window.screen?.height || 0
+        );
+        const mobileUa = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i.test(ua);
+        const ipadLike = /Macintosh/i.test(ua) && touchPoints > 1;
+        const desktopLikeUa = /Windows NT|X11|Linux x86_64|CrOS/i.test(ua) || (/Macintosh/i.test(ua) && !ipadLike);
+        const compactTouchViewport = shortSide > 0 && shortSide <= 1024 && longSide <= 1366;
+        return mobileUa || ipadLike || (!desktopLikeUa && touchPoints > 0 && coarsePointer && compactTouchViewport);
+      };
+
+      const blurLoginTextInputs = () => {
+        [input, boardInput].forEach((element) => {
+          if (!(element instanceof HTMLElement)) return;
+          if (document.activeElement !== element) return;
+          try { element.blur(); } catch (_) {}
+        });
+      };
+
       const syncDots = () => {
         const length = pinBuffer.length;
         dots.forEach((dot, index) => {
           dot.classList.toggle('is-filled', index < length);
         });
+      };
+
+      const syncPasscodeField = () => {
+        input.value = pinBuffer;
+        syncDots();
+      };
+
+      const focusPasscodeField = () => {
+        if (useInAppPasscodePad) {
+          blurLoginTextInputs();
+          return false;
+        }
+        try {
+          input.focus({ preventScroll: true });
+          return true;
+        } catch (_) {}
+        try {
+          input.focus();
+          return true;
+        } catch (_) {}
+        return false;
+      };
+
+      const updatePasscodeEntryMode = () => {
+        useInAppPasscodePad = isProbablyTouchMobileDevice();
+        if (gate instanceof HTMLElement) {
+          gate.setAttribute('data-mobile-passcode', useInAppPasscodePad ? '1' : '0');
+        }
+        if (passcodePad instanceof HTMLElement) {
+          passcodePad.classList.toggle('hidden', !useInAppPasscodePad);
+          passcodePad.setAttribute('aria-hidden', useInAppPasscodePad ? 'false' : 'true');
+        }
+        input.readOnly = useInAppPasscodePad;
+        if (useInAppPasscodePad) {
+          input.setAttribute('inputmode', 'none');
+          input.setAttribute('tabindex', '-1');
+          blurLoginTextInputs();
+        } else {
+          input.setAttribute('inputmode', 'numeric');
+          input.removeAttribute('tabindex');
+        }
+        syncPasscodeField();
       };
 
       const setMessage = (text, isError = false) => {
@@ -56241,8 +56399,7 @@ Macに近い表示になり、ツール全体が見やすくなります。`
 
       const clearInput = () => {
         pinBuffer = '';
-        input.value = '';
-        syncDots();
+        syncPasscodeField();
       };
 
       const setInputDisabled = (disabled) => {
@@ -56414,7 +56571,7 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         setInputDisabled(false);
         panel.classList.remove('is-error');
         setMessage('', false);
-        setTimeout(() => input.focus(), 0);
+        setTimeout(() => focusPasscodeField(), 0);
       };
 
       const openLoginIntroModalIfNeeded = () => {
@@ -56488,7 +56645,8 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         clearInput();
         setMessage('', false);
         setBoardBackBtnVisible(false);
-        setTimeout(() => input.focus(), 0);
+        blurLoginTextInputs();
+        setTimeout(() => focusPasscodeField(), 0);
       };
 
       const clearLoginRelockTimer = () => {
@@ -56556,7 +56714,7 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         setInputDisabled(false);
         clearInput();
         setMessage('', false);
-        setTimeout(() => input.focus(), 0);
+        setTimeout(() => focusPasscodeField(), 0);
       };
 
       const openSpecialModal = () => {
@@ -56586,7 +56744,7 @@ Macに近い表示になり、ツール全体が見やすくなります。`
           setInputDisabled(false);
           clearInput();
           setMessage('', false);
-          setTimeout(() => input.focus(), 0);
+          setTimeout(() => focusPasscodeField(), 0);
         }
       };
 
@@ -56726,7 +56884,7 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         }
         setTimeout(() => {
           if (unlocked || prankRunning || specialModalOpen || adminModalOpen || introModalOpen || appUpdateModalOpen) return;
-          input.focus();
+          focusPasscodeField();
         }, 0);
       };
 
@@ -56781,7 +56939,7 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         setInputDisabled(false);
         clearInput();
         setMessage('', false);
-        setTimeout(() => input.focus(), 0);
+        setTimeout(() => focusPasscodeField(), 0);
       };
 
       const startPrankSequence = () => {
@@ -56892,7 +57050,7 @@ Macに近い表示になり、ツール全体が見やすくなります。`
             try { introNextBtn?.focus({ preventScroll: true }); } catch (_) {}
             return;
           }
-          input.focus();
+          focusPasscodeField();
         }, 0);
       };
 
@@ -57000,15 +57158,14 @@ Macに近い表示になり、ツール全体が見やすくなります。`
           panel.classList.remove('is-error');
           rejectAnimating = false;
           setInputDisabled(false);
-          if (!prankRunning && !specialModalOpen && !adminModalOpen && !introModalOpen) input.focus();
+          if (!prankRunning && !specialModalOpen && !adminModalOpen && !introModalOpen) focusPasscodeField();
         }, 980);
       };
 
       const tryUnlock = () => {
         if (unlocked || prankRunning || specialModalOpen || adminModalOpen || introModalOpen || appUpdateModalOpen || rejectAnimating) return;
         pinBuffer = (pinBuffer || '').replace(/\D/g, '').slice(0, 4);
-        input.value = pinBuffer;
-        syncDots();
+        syncPasscodeField();
         if (pinBuffer.length > 0) setMessage('', false);
         if (pinBuffer.length < 4) return;
 
@@ -57073,8 +57230,7 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         }
         if (key === 'Backspace') {
           pinBuffer = pinBuffer.slice(0, -1);
-          input.value = pinBuffer;
-          syncDots();
+          syncPasscodeField();
           if (pinBuffer.length > 0) setMessage('', false);
           e.preventDefault();
           return;
@@ -57085,9 +57241,42 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         }
       };
 
-      panel.addEventListener('click', () => {
-        if (prankRunning || specialModalOpen || adminModalOpen || introModalOpen || appUpdateModalOpen) return;
-        input.focus();
+      if (passcodeEntry instanceof HTMLElement) {
+        passcodeEntry.addEventListener('click', (event) => {
+          if (prankRunning || specialModalOpen || adminModalOpen || introModalOpen || appUpdateModalOpen) return;
+          if (!(event.target instanceof Element)) return;
+          if (event.target.closest('[data-login-passcode-digit], [data-login-passcode-action]')) return;
+          focusPasscodeField();
+        });
+      }
+      passcodePadButtons.forEach((button) => {
+        if (!(button instanceof HTMLButtonElement)) return;
+        button.addEventListener('pointerdown', (event) => {
+          event.stopPropagation();
+        });
+        button.addEventListener('click', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          if (unlocked || prankRunning || specialModalOpen || adminModalOpen || introModalOpen || appUpdateModalOpen || rejectAnimating) return;
+          const digit = String(button.dataset.loginPasscodeDigit || '').trim();
+          const action = String(button.dataset.loginPasscodeAction || '').trim();
+          if (digit) {
+            if (pinBuffer.length >= 4) return;
+            pinBuffer += digit;
+            tryUnlock();
+            return;
+          }
+          if (action === 'backspace') {
+            pinBuffer = pinBuffer.slice(0, -1);
+            syncPasscodeField();
+            if (pinBuffer.length > 0) setMessage('', false);
+            return;
+          }
+          if (action === 'clear') {
+            clearInput();
+            setMessage('', false);
+          }
+        });
       });
       if (boardBackBtn instanceof HTMLButtonElement) {
         boardBackBtn.addEventListener('pointerdown', (event) => {
@@ -57096,6 +57285,7 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         boardBackBtn.addEventListener('click', (event) => {
           event.preventDefault();
           event.stopPropagation();
+          blurLoginTextInputs();
           loginBoardCommitFromInput({ recordHistory: true });
           backToPasscodeWaiting();
         });
@@ -57123,9 +57313,16 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         if (!(event.target instanceof Element)) return;
         if (event.target.closest('#login-board-history-modal')) return;
         if (event.target.closest('#login-board-panel, #login-board-back-row')) return;
+        if (event.target.closest('#login-panel, #login-special-modal, #login-admin-modal, #login-intro-modal')) return;
         if (event.target.closest('.login-bug')) return;
         throwWebFromPoint(event.clientX, event.clientY);
       }, { passive: true });
+      input.addEventListener('focus', () => {
+        if (!useInAppPasscodePad) return;
+        window.setTimeout(() => {
+          blurLoginTextInputs();
+        }, 0);
+      });
       input.addEventListener('input', () => {
         if (prankRunning || specialModalOpen || adminModalOpen || introModalOpen || appUpdateModalOpen) return;
         if (rejectAnimating) {
@@ -57208,9 +57405,11 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         if (!unlocked) return;
         lockGateWithPasscode('', { clearSkip: true });
       });
+      window.addEventListener('resize', updatePasscodeEntryMode, { passive: true });
 
       document.addEventListener('keydown', handleLockedKey, true);
 
+      updatePasscodeEntryMode();
       resetPrankVisuals(true);
       closeSpecialModal();
       closeAdminModal({ keepInput: true });
