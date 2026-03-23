@@ -37,6 +37,9 @@
       --workspace-desktop-zoom-windows: .89;
       --workspace-screen-zoom: var(--workspace-desktop-zoom-mac);
       --workspace-tablet-zoom: .54;
+      --workspace-phone-return-zoom: .46;
+      --workspace-phone-return-tab-zoom: .72;
+      --workspace-phone-return-min-width: 1080px;
     }
 
     html {
@@ -1327,6 +1330,23 @@
         border-color var(--motion-duration-base) var(--motion-ease-settle) var(--motion-tone-delay),
         box-shadow var(--motion-duration-base) var(--motion-ease-settle) var(--motion-tone-delay);
     }
+    body[data-phone-admin-return-ui="1"]{
+      overflow-x:auto;
+    }
+    body[data-phone-admin-return-ui="1"] #app-main-root{
+      overflow-x:auto;
+    }
+    body[data-phone-admin-return-ui="1"] #workspace-shell{
+      overflow-x:auto;
+      overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-gutter:auto;
+    }
+    body[data-phone-admin-return-ui="1"] #workspace-shell > [id^="sec-"]:not(.hidden){
+      min-width:var(--workspace-phone-return-min-width, 1080px);
+      width:max-content;
+      max-width:none;
+    }
     #workspace-shell::before,
     #workspace-shell::after{
       content:"";
@@ -1736,6 +1756,15 @@
       }
       body.display-mode-tablet #tool-tab-bar{
         zoom:var(--workspace-tablet-zoom, .54);
+      }
+      body[data-phone-admin-return-ui="1"]:not(.tool-focus-mode){
+        --workspace-screen-zoom:var(--workspace-phone-return-zoom, .46);
+      }
+      body[data-phone-admin-return-ui="1"] #tool-tab-bar{
+        zoom:var(--workspace-phone-return-tab-zoom, .72);
+      }
+      body[data-phone-admin-return-ui="1"] #floating-tool-tab-bar .floating-tool-tab-inner{
+        zoom:var(--workspace-phone-return-tab-zoom, .72);
       }
       body.tool-focus-mode{
         --workspace-screen-zoom:1;
@@ -2162,6 +2191,12 @@
       letter-spacing:.04em;
       text-shadow:none;
       pointer-events:none;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #report-input-panel{
+      order:2;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #report-output-panel{
+      order:1;
     }
     .sound-toggle:hover { background: rgba(15,23,42,.96); }
 
@@ -11487,6 +11522,28 @@
     padding:16px;
     box-shadow: 0 10px 18px rgba(0,0,0,.06);
   }
+  body[data-mobile-passcode-tools-layout="1"] #fax-app .fax-input-card{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  body[data-mobile-passcode-tools-layout="1"] #fax-app .fax-input-card > *{
+    margin-top:0 !important;
+    margin-bottom:0 !important;
+  }
+  body[data-mobile-passcode-tools-layout="1"] #fax-app .fax-input-card-title{
+    order:1;
+  }
+  body[data-mobile-passcode-tools-layout="1"] #fax-app .fax-mobile-top-actions{
+    order:2;
+    padding-top:0 !important;
+  }
+  body[data-mobile-passcode-tools-layout="1"] #fax-app .fax-template-actions{
+    order:3;
+  }
+  body[data-mobile-passcode-tools-layout="1"] #fax-app .fax-input-fields{
+    order:4;
+  }
 
   #fax-app .fax-labelblock{ display:block; }
   #fax-app .fax-labeltext{
@@ -14195,7 +14252,7 @@
 
       <!-- 営業日報 -->
       <div id="sec-report" class="grid grid-cols-12 gap-8 h-full">
-        <div class="col-span-12 lg:col-span-5 space-y-6 border-r border-slate-200 pr-8">
+        <div id="report-input-panel" class="col-span-12 lg:col-span-5 space-y-6 border-r border-slate-200 pr-8">
 
           <div class="mail-section">
             <div class="flex justify-between items-center mb-3">
@@ -14246,7 +14303,7 @@
           </div>
         </div>
 
-        <div class="col-span-12 lg:col-span-7 flex flex-col">
+        <div id="report-output-panel" class="col-span-12 lg:col-span-7 flex flex-col">
           <div class="flex justify-between items-center mb-4">
             <h3 class="font-bold text-lg tracking-tighter text-slate-800 uppercase">生成結果</h3>
             <div class="flex items-center gap-2">
@@ -14603,17 +14660,22 @@
 
     <div class="fax-grid">
       <!-- 入力 -->
-      <div class="fax-card no-print">
-        <div class="text-sm font-semibold text-gray-800 mb-3">入力</div>
+      <div class="fax-card fax-input-card no-print">
+        <div class="fax-input-card-title text-sm font-semibold text-gray-800 mb-3">入力</div>
 
-        <div class="flex flex-wrap gap-2 mb-4">
+        <div class="fax-template-actions flex flex-wrap gap-2 mb-4">
           <button type="button" class="fax-btn" data-fax-tpl="question">質問</button>
           <button type="button" class="fax-btn" data-fax-tpl="order">発注</button>
           <button type="button" class="fax-btn" data-fax-tpl="notice">連絡</button>
           <button type="button" class="fax-btn" data-fax-tpl="other">その他</button>
         </div>
 
-        <div class="space-y-3">
+        <div class="fax-mobile-top-actions flex flex-col sm:flex-row gap-2 pt-2">
+          <button id="fax-btnPrint" type="button" class="fax-btn-primary">印刷する</button>
+          <button id="fax-btnClear" type="button" class="fax-btn-secondary">入力をクリア</button>
+        </div>
+
+        <div class="fax-input-fields space-y-3">
           <label class="fax-labelblock">
             <span class="fax-labeltext">送信者</span>
             <select id="fax-senderSelect" class="fax-input">
@@ -14674,11 +14736,6 @@
               <span class="fax-labeltext">返信先FAX</span>
               <input id="fax-reply-fax-input" class="fax-input" type="text" placeholder="（例）078-334-1666">
             </label>
-          </div>
-
-          <div class="flex flex-col sm:flex-row gap-2 pt-2">
-            <button id="fax-btnPrint" type="button" class="fax-btn-primary">印刷する</button>
-            <button id="fax-btnClear" type="button" class="fax-btn-secondary">入力をクリア</button>
           </div>
 
           <div id="fax-debug" class="hidden text-xs text-red-600 pt-2 whitespace-pre-wrap"></div>
@@ -56330,9 +56387,13 @@ window.collectPrintDiagnostics = function(stage){
       const useMobilePasscodeToolLayout = normalizedLoginContext.isMobileTablet && normalizedLoginContext.usedInAppPasscodePad;
       if (document.body) {
         document.body.setAttribute('data-mobile-passcode-tools-layout', useMobilePasscodeToolLayout ? '1' : '0');
+        document.body.setAttribute('data-phone-admin-return-ui', isPhoneAdminReturnUiEnabled() ? '1' : '0');
       }
       if (window.__appBooted) {
         setAdminShiftMode(false);
+        if (typeof scheduleWorkspaceRelayout === 'function') {
+          scheduleWorkspaceRelayout();
+        }
         return;
       }
       window.__appBooted = true;
@@ -56734,6 +56795,8 @@ window.collectPrintDiagnostics = function(stage){
     let adminShiftScreenBound = false;
     let adminShiftAutoPhoneEntry = false;
     let adminShiftFormPanelController = null;
+    let phoneAdminReturnUiPending = false;
+    let phoneAdminReturnUiEnabled = false;
 
     function getActiveLoginDeviceKind() {
       const raw = String(document.body?.getAttribute('data-login-device-kind') || '').trim().toLowerCase();
@@ -56750,6 +56813,25 @@ window.collectPrintDiagnostics = function(stage){
 
     function isAdminShiftAutoPhoneEntry() {
       return adminShiftAutoPhoneEntry;
+    }
+
+    function setPhoneAdminReturnUiPending(active) {
+      phoneAdminReturnUiPending = !!active;
+    }
+
+    function isPhoneAdminReturnUiPending() {
+      return phoneAdminReturnUiPending;
+    }
+
+    function setPhoneAdminReturnUiEnabled(active) {
+      phoneAdminReturnUiEnabled = !!active;
+      if (document.body) {
+        document.body.setAttribute('data-phone-admin-return-ui', phoneAdminReturnUiEnabled ? '1' : '0');
+      }
+    }
+
+    function isPhoneAdminReturnUiEnabled() {
+      return phoneAdminReturnUiEnabled;
     }
 
     function adminShiftNotify(text = '') {
@@ -57543,7 +57625,10 @@ window.collectPrintDiagnostics = function(stage){
           window.dispatchEvent(new CustomEvent('admin-shift-back-to-login'));
         };
         if (isAdminShiftAutoPhoneEntry() && getActiveLoginDeviceKind() === 'phone') {
-          openAdminShiftPhoneBackNotice(proceedToLogin);
+          openAdminShiftPhoneBackNotice(() => {
+            setPhoneAdminReturnUiPending(true);
+            proceedToLogin();
+          });
           return;
         }
         proceedToLogin();
@@ -58918,6 +59003,15 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         if (unlocked) return;
         const targetMode = mode === 'admin' ? 'admin' : 'default';
         const shouldPersistSession = persistSession && targetMode !== 'admin';
+        if (
+          targetMode === 'default' &&
+          loginDeviceKind === 'phone' &&
+          usedInAppPasscodePad &&
+          isPhoneAdminReturnUiPending()
+        ) {
+          setPhoneAdminReturnUiPending(false);
+          setPhoneAdminReturnUiEnabled(true);
+        }
         unlocked = true;
         attemptCount = 0;
         prankRunning = false;
