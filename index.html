@@ -13062,6 +13062,9 @@
   body.is-admin-shift{
     overflow:auto;
   }
+  body.is-admin-shift[data-login-device-kind="phone"]{
+    overflow:hidden;
+  }
   body.is-admin-shift #sky-mode-toggle{
     display:none !important;
   }
@@ -13357,6 +13360,39 @@
       flex:1 1 100%;
       margin-left:0;
     }
+  }
+  body.is-admin-shift[data-login-device-kind="phone"] #admin-shift-screen{
+    min-height:100dvh;
+    height:100dvh;
+    padding:12px 12px calc(12px + env(safe-area-inset-bottom));
+    overflow:hidden;
+  }
+  body.is-admin-shift[data-login-device-kind="phone"] #admin-shift-screen.is-active{
+    align-items:stretch;
+    justify-content:flex-start;
+  }
+  body.is-admin-shift[data-login-device-kind="phone"] .admin-shift-shell{
+    width:100%;
+    max-height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  body.is-admin-shift[data-login-device-kind="phone"] .admin-shift-form-panel{
+    flex:1 1 auto;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  body.is-admin-shift[data-login-device-kind="phone"] .admin-shift-employee-list{
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+    padding-right:2px;
+    align-content:start;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
   }
   .login-admin-panel{
     width:min(92vw, 520px);
@@ -14324,6 +14360,14 @@
               <div class="flex gap-2">
                 <label class="mail-chip clickable active" id="inv-mid-chip"><input type="radio" name="inventoryType" value="middle" checked class="mr-1">中間</label>
                 <label class="mail-chip clickable" id="inv-end-chip"><input type="radio" name="inventoryType" value="monthend" class="mr-1">月末</label>
+              </div>
+            </div>
+
+            <div id="shift-share-mode-box" class="mail-section mail-panel mail-panel-aux hidden">
+              <label class="block text-sm font-bold text-slate-700 mb-2">共有種別</label>
+              <div class="flex gap-2 flex-wrap">
+                <label class="mail-chip clickable active" id="shift-share-new-chip"><input type="radio" name="shiftShareMode" value="new" checked class="mr-1">新規共有</label>
+                <label class="mail-chip clickable" id="shift-share-resend-chip"><input type="radio" name="shiftShareMode" value="resend" class="mr-1">訂正・再送</label>
               </div>
             </div>
 
@@ -28782,6 +28826,7 @@ init();
       category: 'report',
       sender: 'kawauchi',
       inventoryType: 'middle',
+      shiftShareMode: 'new',
       storeSuffix: '神戸三宮店',
       subjectShuffle: [
         '営業報告書の提出',
@@ -28888,6 +28933,11 @@ init();
     const mailKawabeBccEntry = Object.freeze({
       mail: 'nimblework@docomo.ne.jp',
       label: '川辺',
+      checked: true
+    });
+    const mailFujiiBccEntry = Object.freeze({
+      mail: '02030519yy@gmail.com',
+      label: '藤井',
       checked: true
     });
     const storeSyncState = {
@@ -40694,7 +40744,7 @@ init();
         icon: '⚔️',
         theme: 'embedded',
         playable: true,
-        description: 'このゲームは性質上、拡大表示しないと安定してプレイすることができません。\n左上の薄い青色ブロック「拡大表示」ボタンを押してからスタートしてください。',
+        description: 'このゲームは仕様上、MacBook Proから開いた場合にのみ、安定してプレイしていただけます。\nそれ以外の端末では、画面が正常に処理されません。\nご了承のうえ、お楽しみください。',
         docsMode: 'preset'
       }),
       Object.freeze({
@@ -49901,7 +49951,7 @@ init();
         return appendMailSignatureBlock(head + 'お疲れ様です。\n\n宜しくお願い致します。', { spacing: '\n\n\n\n' });
       }
       if (mailState.sender === 'mori') {
-        return appendMailSignatureBlock(head + 'お疲れ様です。\n\n営業報告書です。\n\nご確認下さいませ。', { spacing: '\n\n\n\n' });
+        return appendMailSignatureBlock(head + 'お疲れ様です。\n\n営業報告書です。\n\nご確認下さいませ。\n\n宜しくお願い申し上げます。', { spacing: '\n\n\n\n' });
       }
       if (mailState.sender === 'nishikawa') {
         return appendMailSignatureBlock(head + 'お疲れ様です。\n\n営業報告書です。\n\nご確認下さい。', { spacing: '\n\n\n\n' });
@@ -49917,6 +49967,13 @@ init();
         return appendMailSignatureBlock(head + 'お疲れ様です。\n\n宜しくお願い致します。', { spacing: '\n\n\n\n' });
       }
       return appendMailSignatureBlock(head + 'お疲れ様です。\n\n宜しくお願い致します。', { spacing: '\n\n\n\n' });
+    }
+
+    function buildShiftShareDefaultBody() {
+      if (mailState.shiftShareMode === 'resend') {
+        return appendMailSignatureBlock('大変申し訳ございません。\n\n前回送信させていただいたメールに添付していたシフトについて、一部調整が入りました。\n\n改めて添付しておりますデータをご確認ください。\n\nご質問やお気づきの点がございましたら、調理役職者までお声がけください。\n\n以上、よろしくお願いいたします。', { spacing: '\n\n\n\n' });
+      }
+      return appendMailSignatureBlock('大変お待たせいたしました。\n\n調理場シフトが完成しましたので、取り急ぎ画像を共有いたします。\n\n今後、変更が入った場合は、改めてメールでご連絡いたしますので、よろしくお願いいたします。\n\nご質問やお気づきの点がございましたら、調理役職者までお声がけください。\n\n以上、よろしくお願いいたします。', { spacing: '\n\n\n\n' });
     }
 
     function setMailChipActive(groupId, activeValue, nameForInput = null) {
@@ -50152,6 +50209,19 @@ init();
       const endChip = document.getElementById('inv-end-chip');
       midChip.classList.toggle('active', mailState.inventoryType === 'middle');
       endChip.classList.toggle('active', mailState.inventoryType === 'monthend');
+    }
+
+    function renderShiftShareModeActive() {
+      const newChip = document.getElementById('shift-share-new-chip');
+      const resendChip = document.getElementById('shift-share-resend-chip');
+      if (!(newChip instanceof HTMLElement) || !(resendChip instanceof HTMLElement)) return;
+      const isNew = mailState.shiftShareMode !== 'resend';
+      const newInput = newChip.querySelector('input[name="shiftShareMode"]');
+      const resendInput = resendChip.querySelector('input[name="shiftShareMode"]');
+      newChip.classList.toggle('active', isNew);
+      resendChip.classList.toggle('active', !isNew);
+      if (newInput instanceof HTMLInputElement) newInput.checked = isNew;
+      if (resendInput instanceof HTMLInputElement) resendInput.checked = !isNew;
     }
 
     function renderCcList(items=[]) {
@@ -51317,18 +51387,21 @@ init();
       const btnSubShuffle = document.getElementById('btn-subject-shuffle');
       const btnBodyShuffle = document.getElementById('btn-body-shuffle');
       const invBox = document.getElementById('inventory-subtype-box');
+      const shiftShareModeBox = document.getElementById('shift-share-mode-box');
       if (
         !(to instanceof HTMLInputElement) ||
         !(subject instanceof HTMLInputElement) ||
         !(body instanceof HTMLTextAreaElement) ||
         !(btnSubShuffle instanceof HTMLButtonElement) ||
         !(btnBodyShuffle instanceof HTMLButtonElement) ||
-        !(invBox instanceof HTMLElement)
+        !(invBox instanceof HTMLElement) ||
+        !(shiftShareModeBox instanceof HTMLElement)
       ) return;
 
       btnSubShuffle.classList.add('hidden');
       btnBodyShuffle.classList.add('hidden');
       invBox.classList.add('hidden');
+      shiftShareModeBox.classList.add('hidden');
       renderCcList([]);
       renderBccList([]);
       let bccItems = [];
@@ -51353,6 +51426,7 @@ init();
           { mail: 'cherry-blossom-princess@docomo.ne.jp', label: '古河', checked: true },
           { ...mailTakadaBccEntry, checked: false },
           { ...mailKawabeBccEntry, checked: false },
+          { ...mailFujiiBccEntry },
           { mail: 'douraku0880@icloud.com', label: 'タブレット', checked: true },
           { mail: 'ta.bear.415.kani@gmail.com', label: '西川副主任', checked: false }
         ];
@@ -51410,6 +51484,8 @@ init();
       }
 
       if (mailState.category === 'shiftShare') {
+        shiftShareModeBox.classList.remove('hidden');
+        renderShiftShareModeActive();
         to.readOnly = true;
         to.value = 'sannomiya@douraku.co.jp, douraku0880@icloud.com';
         subject.value = 'シフトの共有';
@@ -51417,11 +51493,12 @@ init();
           { mail: 'cherry-blossom-princess@docomo.ne.jp', label: '古河', checked: true },
           { ...mailTakadaBccEntry },
           { ...mailKawabeBccEntry },
+          { ...mailFujiiBccEntry },
           { mail: 't.kawauchi@douraku.co.jp', label: '川内店長', checked: true },
           { mail: 'ta.bear.415.kani@gmail.com', label: '西川副主任', checked: true }
         ];
         if (!keepBodyIfEditing) {
-          body.value = appendMailSignatureBlock('大変お待たせいたしました。\n\n調理場シフトが完成しましたので、取り急ぎ画像を共有いたします。\n\n今後、変更が入った場合は、改めてメールでご連絡いたしますので、よろしくお願いいたします。\n\nご質問やお気づきの点がございましたら、調理役職者までお声がけください。\n\n以上、よろしくお願いいたします。', { spacing: '\n\n\n\n' });
+          body.value = buildShiftShareDefaultBody();
         }
       }
 
@@ -52151,6 +52228,13 @@ init();
       document.querySelectorAll('input[name="inventoryType"]').forEach(r => {
         r.addEventListener('change', () => {
           mailState.inventoryType = r.value;
+          applyMailCategory(false);
+        });
+      });
+
+      document.querySelectorAll('input[name="shiftShareMode"]').forEach(r => {
+        r.addEventListener('change', () => {
+          mailState.shiftShareMode = r.value === 'resend' ? 'resend' : 'new';
           applyMailCategory(false);
         });
       });
@@ -55935,8 +56019,20 @@ window.collectPrintDiagnostics = function(stage){
 // ===== 初期化 =====
     function normalizeLoginUnlockContext(raw = null) {
       const source = (raw && typeof raw === 'object') ? raw : {};
+      const rawDeviceKind = String(source.deviceKind || '').trim().toLowerCase();
+      let deviceKind = 'desktop';
+      if (rawDeviceKind === 'phone' || rawDeviceKind === 'tablet' || rawDeviceKind === 'desktop') {
+        deviceKind = rawDeviceKind;
+      } else if (source.isPhone) {
+        deviceKind = 'phone';
+      } else if (source.isTablet || source.isMobileTablet) {
+        deviceKind = 'tablet';
+      }
       return {
-        isMobileTablet: !!source.isMobileTablet,
+        deviceKind,
+        isPhone: deviceKind === 'phone',
+        isTablet: deviceKind === 'tablet',
+        isMobileTablet: deviceKind === 'phone' || deviceKind === 'tablet',
         usedInAppPasscodePad: !!source.usedInAppPasscodePad
       };
     }
@@ -56183,7 +56279,7 @@ window.collectPrintDiagnostics = function(stage){
       const normalizedLoginContext = normalizeLoginUnlockContext(loginContext);
       bootApp(normalizedLoginContext);
 
-      if (normalizedLoginContext.usedInAppPasscodePad && typeof applyDisplayMode === 'function') {
+      if (normalizedLoginContext.isTablet && typeof applyDisplayMode === 'function') {
         try {
           applyDisplayMode('tablet', { save: false });
         } catch (_) {}
@@ -56487,6 +56583,24 @@ window.collectPrintDiagnostics = function(stage){
       { name: '藤田副主任', url: 'https://power-speedboat-2a5.notion.site/32887ce6d69280da9a4bc0b69c372d77' }
     ];
     let adminShiftScreenBound = false;
+    let adminShiftAutoPhoneEntry = false;
+
+    function getActiveLoginDeviceKind() {
+      const raw = String(document.body?.getAttribute('data-login-device-kind') || '').trim().toLowerCase();
+      if (raw === 'phone' || raw === 'tablet' || raw === 'desktop') return raw;
+      return 'desktop';
+    }
+
+    function setAdminShiftAutoPhoneEntry(active) {
+      adminShiftAutoPhoneEntry = !!active;
+      if (document.body) {
+        document.body.setAttribute('data-admin-shift-auto-phone-entry', adminShiftAutoPhoneEntry ? '1' : '0');
+      }
+    }
+
+    function isAdminShiftAutoPhoneEntry() {
+      return adminShiftAutoPhoneEntry;
+    }
 
     function adminShiftNotify(text = '') {
       const message = String(text || '').trim();
@@ -57142,6 +57256,20 @@ window.collectPrintDiagnostics = function(stage){
       onConfirm();
     }
 
+    function openAdminShiftPhoneBackNotice(onConfirm = null) {
+      return openAdminShiftCenteredConfirmDialog({
+        modalId: 'admin-shift-phone-back-notice',
+        title: 'ご利用時の注意',
+        message:
+`PCまたはタブレット端末での利用を前提に作成しています。
+スマートフォンでは正常に動作しない場合があることを、あらかじめご了承のうえ、パスコード入力画面にお進みください
+0880で起動します。`,
+        confirmLabel: '進む',
+        cancelLabel: '戻る',
+        onConfirm
+      });
+    }
+
     function initAdminShiftScreen() {
       if (adminShiftScreenBound) return;
       const screen = document.getElementById('admin-shift-screen');
@@ -57207,6 +57335,14 @@ window.collectPrintDiagnostics = function(stage){
         formPanel.classList.toggle('hidden', !isOpen);
         formPanel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
         individualBtn.textContent = isOpen ? '個別フォームを閉じる' : '個別フォーム';
+        if (isOpen && getActiveLoginDeviceKind() === 'phone') {
+          employeeList.scrollTop = 0;
+          window.requestAnimationFrame(() => {
+            try {
+              formPanel.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            } catch (_) {}
+          });
+        }
       };
 
       individualBtn.addEventListener('click', () => {
@@ -57228,7 +57364,15 @@ window.collectPrintDiagnostics = function(stage){
         });
       });
       backLoginBtn.addEventListener('click', () => {
-        window.dispatchEvent(new CustomEvent('admin-shift-back-to-login'));
+        const proceedToLogin = () => {
+          setAdminShiftAutoPhoneEntry(false);
+          window.dispatchEvent(new CustomEvent('admin-shift-back-to-login'));
+        };
+        if (isAdminShiftAutoPhoneEntry() && getActiveLoginDeviceKind() === 'phone') {
+          openAdminShiftPhoneBackNotice(proceedToLogin);
+          return;
+        }
+        proceedToLogin();
       });
 
       renderEmployees();
@@ -57324,10 +57468,10 @@ Macに近い表示になり、ツール全体が見やすくなります。`
 遊び心としてゲーム要素も組み込んでいます。
 
 端末や環境によって表示ズレが出る場合があります。
-特に「資料ゲットだぜ！」は、社内PC環境で
-・バトル画面の位置ズレ
-・操作ボタンが押せない / 見えない
-といった不具合が確認されています。
+特に「資料ゲットだぜ！」は、仕様上、MacBook Proから開いた場合にのみ、
+安定してプレイしていただけます。
+それ以外の端末では、画面が正常に処理されません。
+ご了承のうえ、お楽しみください。
 
 どのゲームも「ポーズ画面」から、ゲームをクリアしなくても直接資料を開けます。
 急ぎの場合はそちらをご利用ください。`
@@ -57354,6 +57498,7 @@ Macに近い表示になり、ツール全体が見やすくなります。`
       let pinBuffer = '';
       let useInAppPasscodePad = false;
       let usedInAppPasscodePad = false;
+      let loginDeviceKind = 'desktop';
       let rejectAnimating = false;
       let attemptCount = 0;
       let prankRunning = false;
@@ -57807,7 +57952,7 @@ Macに近い表示になり、ツール全体が見やすくなります。`
       gate.classList.remove('is-unlocked');
       gate.removeAttribute('aria-hidden');
 
-      const isProbablyTouchMobileDevice = () => {
+      const detectLoginDeviceKind = () => {
         const ua = String(window.navigator?.userAgent || '');
         const touchPoints = Number(window.navigator?.maxTouchPoints || 0);
         const matchMedia = typeof window.matchMedia === 'function' ? window.matchMedia.bind(window) : null;
@@ -57823,11 +57968,27 @@ Macに近い表示になり、ツール全体が見やすくなります。`
           window.innerWidth || window.screen?.width || 0,
           window.innerHeight || window.screen?.height || 0
         );
-        const mobileUa = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i.test(ua);
+        const isIPhone = /iPhone|iPod/i.test(ua);
         const ipadLike = /Macintosh/i.test(ua) && touchPoints > 1;
+        const isIPad = /iPad/i.test(ua) || ipadLike;
+        const isAndroid = /Android/i.test(ua);
+        const isAndroidMobile = isAndroid && /Mobile/i.test(ua);
+        const isAndroidTablet = isAndroid && !/Mobile/i.test(ua);
+        const isOtherPhoneUa = /webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+        const explicitTabletUa = /Tablet/i.test(ua);
+        const explicitMobileUa = /Mobile/i.test(ua);
         const desktopLikeUa = /Windows NT|X11|Linux x86_64|CrOS/i.test(ua) || (/Macintosh/i.test(ua) && !ipadLike);
-        const compactTouchViewport = shortSide > 0 && shortSide <= 1024 && longSide <= 1366;
-        return mobileUa || ipadLike || (!desktopLikeUa && touchPoints > 0 && coarsePointer && compactTouchViewport);
+        if (isIPhone || isAndroidMobile || isOtherPhoneUa || (explicitMobileUa && !isIPad && !explicitTabletUa)) {
+          return 'phone';
+        }
+        if (isIPad || isAndroidTablet || explicitTabletUa) {
+          return 'tablet';
+        }
+        if (!desktopLikeUa && touchPoints > 0 && coarsePointer) {
+          if (shortSide > 0 && shortSide <= 767) return 'phone';
+          if (shortSide > 0 && shortSide <= 1024 && longSide <= 1366) return 'tablet';
+        }
+        return 'desktop';
       };
 
       const blurLoginTextInputs = () => {
@@ -57839,7 +58000,10 @@ Macに近い表示になり、ツール全体が見やすくなります。`
       };
 
       const getUnlockContext = () => ({
-        isMobileTablet: useInAppPasscodePad || isProbablyTouchMobileDevice(),
+        deviceKind: loginDeviceKind,
+        isPhone: loginDeviceKind === 'phone',
+        isTablet: loginDeviceKind === 'tablet',
+        isMobileTablet: loginDeviceKind === 'phone' || loginDeviceKind === 'tablet',
         usedInAppPasscodePad: usedInAppPasscodePad
       });
 
@@ -57872,9 +58036,14 @@ Macに近い表示になり、ツール全体が見やすくなります。`
       };
 
       const updatePasscodeEntryMode = () => {
-        useInAppPasscodePad = isProbablyTouchMobileDevice();
+        loginDeviceKind = detectLoginDeviceKind();
+        useInAppPasscodePad = loginDeviceKind !== 'desktop';
         if (gate instanceof HTMLElement) {
           gate.setAttribute('data-mobile-passcode', useInAppPasscodePad ? '1' : '0');
+          gate.setAttribute('data-login-device-kind', loginDeviceKind);
+        }
+        if (document.body) {
+          document.body.setAttribute('data-login-device-kind', loginDeviceKind);
         }
         if (passcodePad instanceof HTMLElement) {
           passcodePad.classList.toggle('hidden', !useInAppPasscodePad);
@@ -58887,6 +59056,7 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         adminProceedBtn.addEventListener('click', () => {
           clearLoginSkipUntil();
           closeAdminModal({ keepInput: true });
+          setAdminShiftAutoPhoneEntry(false);
           unlock({ mode: 'admin', persistSession: false, skipUntil: 0 });
         });
       }
@@ -58921,6 +59091,7 @@ Macに近い表示になり、ツール全体が見やすくなります。`
       }
       window.addEventListener('admin-shift-back-to-login', () => {
         if (!unlocked) return;
+        setAdminShiftAutoPhoneEntry(false);
         lockGateWithPasscode('', { clearSkip: true });
       });
       window.addEventListener('resize', updatePasscodeEntryMode, { passive: true });
@@ -58931,6 +59102,12 @@ Macに近い表示になり、ツール全体が見やすくなります。`
       resetPrankVisuals(true);
       closeSpecialModal();
       closeAdminModal({ keepInput: true });
+      if (loginDeviceKind === 'phone') {
+        setAdminShiftAutoPhoneEntry(true);
+        unlock({ mode: 'admin', persistSession: false, animate: false, skipUntil: 0 });
+        return;
+      }
+      setAdminShiftAutoPhoneEntry(false);
       const validSkipUntil = getValidLoginSkipUntil();
       if (validSkipUntil > Date.now()) {
         unlock({ persistSession: false, animate: false, skipUntil: validSkipUntil });
