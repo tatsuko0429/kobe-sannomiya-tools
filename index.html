@@ -13603,6 +13603,16 @@
     gap:10px;
     align-items:start;
   }
+  .admin-shift-employee-item{
+    display:flex;
+    align-items:stretch;
+    gap:8px;
+    min-width:0;
+  }
+  .admin-shift-employee-item .admin-shift-employee-btn{
+    width:auto;
+    min-width:0;
+  }
   .admin-shift-employee-special{
     grid-column:1 / -1;
     display:flex;
@@ -13636,6 +13646,7 @@
   }
   .admin-shift-employee-btn{
     width:100%;
+    flex:1 1 auto;
     align-self:start;
     min-height:48px;
     border:1px solid #bfd3ea;
@@ -13687,6 +13698,49 @@
     box-shadow:
       0 14px 24px rgba(180,83,9,.28),
       inset 0 1px 0 rgba(255,255,255,.7);
+  }
+  .admin-shift-employee-remove-btn{
+    flex:0 0 auto;
+    align-self:stretch;
+    min-width:56px;
+    max-width:60px;
+    min-height:42px;
+    border:1px solid rgba(220,38,38,.34);
+    border-radius:10px;
+    background:linear-gradient(180deg, #fff5f5 0%, #ffe4e6 100%);
+    color:#b91c1c;
+    font-size:11px;
+    font-weight:900;
+    line-height:1.1;
+    padding:6px 7px;
+    white-space:nowrap;
+    text-align:center;
+    letter-spacing:.01em;
+    box-shadow:
+      0 4px 10px rgba(185,28,28,.08),
+      inset 0 1px 0 rgba(255,255,255,.85);
+    transition:transform .12s ease, border-color .12s ease, box-shadow .12s ease, background .12s ease;
+  }
+  .admin-shift-employee-remove-btn:hover{
+    border-color:rgba(220,38,38,.52);
+    background:linear-gradient(180deg, #ffe4e6 0%, #fecdd3 100%);
+    box-shadow:
+      0 8px 14px rgba(185,28,28,.12),
+      inset 0 1px 0 rgba(255,255,255,.9);
+    transform:translateY(-1px);
+  }
+  .admin-shift-employee-empty{
+    grid-column:1 / -1;
+    margin:0;
+    padding:12px 14px;
+    border:1px dashed rgba(148,163,184,.48);
+    border-radius:12px;
+    background:rgba(255,255,255,.78);
+    color:#475569;
+    font-size:13px;
+    font-weight:700;
+    line-height:1.6;
+    text-align:center;
   }
   .login-admin-modal{
     position:absolute;
@@ -13828,6 +13882,21 @@
     font-size:13px;
     line-height:1.42;
     letter-spacing:0;
+    text-wrap:pretty;
+    line-break:strict;
+  }
+  body.is-admin-shift[data-login-device-kind="phone"] .admin-shift-employee-remove-btn{
+    min-width:52px;
+    max-width:56px;
+    min-height:40px;
+    padding:5px 6px;
+    font-size:10px;
+    line-height:1.05;
+  }
+  body.is-admin-shift[data-login-device-kind="phone"] .admin-shift-employee-empty{
+    padding:10px 12px;
+    font-size:12px;
+    line-height:1.55;
     text-wrap:pretty;
     line-break:strict;
   }
@@ -57103,11 +57172,46 @@ window.collectPrintDiagnostics = function(stage){
       { name: 'ノー', url: 'https://www.notion.so/2d187ce6d692803493fdf5e59ccc592b?source=copy_link' },
       { name: '藤田副主任', url: 'https://power-speedboat-2a5.notion.site/32887ce6d69280da9a4bc0b69c372d77' }
     ];
+    const adminShiftHiddenEmployeesStorageKey = 'tool_admin_shift_hidden_employees_v1';
     let adminShiftScreenBound = false;
     let adminShiftAutoPhoneEntry = false;
     let adminShiftFormPanelController = null;
     let phoneAdminReturnUiPending = false;
     let phoneAdminReturnUiEnabled = false;
+
+    function adminShiftBuildEmployeeHiddenKey(entry = null) {
+      const row = entry && typeof entry === 'object' ? entry : {};
+      const url = String(row.url || '').trim();
+      const name = String(row.name || '').trim();
+      if (url) return `url:${url}`;
+      if (name) return `name:${name}`;
+      return '';
+    }
+
+    function adminShiftReadHiddenEmployeeKeys() {
+      const parsed = storageReadJSON(adminShiftHiddenEmployeesStorageKey, []);
+      if (!Array.isArray(parsed)) return new Set();
+      return new Set(
+        parsed
+          .map((item) => String(item || '').trim())
+          .filter(Boolean)
+      );
+    }
+
+    function adminShiftWriteHiddenEmployeeKeys(keys) {
+      const list = Array.from(keys instanceof Set ? keys : [])
+        .map((item) => String(item || '').trim())
+        .filter(Boolean);
+      return storageWriteJSON(adminShiftHiddenEmployeesStorageKey, list);
+    }
+
+    function adminShiftHideEmployee(entry = null) {
+      const hiddenKey = adminShiftBuildEmployeeHiddenKey(entry);
+      if (!hiddenKey) return false;
+      const hiddenKeys = adminShiftReadHiddenEmployeeKeys();
+      hiddenKeys.add(hiddenKey);
+      return adminShiftWriteHiddenEmployeeKeys(hiddenKeys);
+    }
 
     function getActiveLoginDeviceKind() {
       const raw = String(document.body?.getAttribute('data-login-device-kind') || '').trim().toLowerCase();
@@ -57836,6 +57940,24 @@ window.collectPrintDiagnostics = function(stage){
       });
     }
 
+    function openAdminShiftHideEmployeeConfirm(entry = null, onConfirm = null) {
+      const row = entry && typeof entry === 'object' ? entry : {};
+      const label = String(row.name || '').trim() || 'この人物';
+      return openAdminShiftCenteredConfirmDialog({
+        modalId: 'admin-shift-hide-employee-confirm',
+        title: '消去の確認',
+        message:
+`「${label}」を個別フォーム一覧から非表示にします。
+
+これを消去してしまうと、容易に復元することはできません。
+Web側のキャッシュを完全にクリアすると、データは復元されますが、
+本当に消去しても問題ないでしょうか？`,
+        confirmLabel: 'はい',
+        cancelLabel: 'いいえ',
+        onConfirm
+      });
+    }
+
     function initAdminShiftScreen() {
       if (adminShiftScreenBound) return;
       const screen = document.getElementById('admin-shift-screen');
@@ -57860,15 +57982,22 @@ window.collectPrintDiagnostics = function(stage){
 
       const renderEmployees = () => {
         employeeList.innerHTML = '';
+        const hiddenKeys = adminShiftReadHiddenEmployeeKeys();
         let newcomerEntry = null;
+        let visibleCount = 0;
         adminShiftEmployeeLinks.forEach((entry) => {
           const row = entry && typeof entry === 'object' ? entry : {};
           const label = String(row.name || '未設定');
           const url = String(row.url || '').trim();
           const isNewcomer = !!row.isNewcomer;
+          const hiddenKey = adminShiftBuildEmployeeHiddenKey(row);
 
           if (isNewcomer) {
             newcomerEntry = { label, url };
+            return;
+          }
+
+          if (hiddenKey && hiddenKeys.has(hiddenKey)) {
             return;
           }
 
@@ -57880,7 +58009,32 @@ window.collectPrintDiagnostics = function(stage){
           btn.addEventListener('click', () => {
             openAdminShiftEmployeeChoiceDialog(label, url);
           });
-          employeeList.appendChild(btn);
+
+          const removeBtn = document.createElement('button');
+          removeBtn.type = 'button';
+          removeBtn.className = 'clickable admin-shift-employee-remove-btn';
+          removeBtn.textContent = '消去';
+          removeBtn.title = `${label}を一覧から非表示にする`;
+          removeBtn.setAttribute('aria-label', `${label}を一覧から非表示にする`);
+          removeBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            openAdminShiftHideEmployeeConfirm(row, () => {
+              const saved = adminShiftHideEmployee(row);
+              if (!saved) {
+                adminShiftNotify('非表示設定を保存できませんでした。');
+                return;
+              }
+              renderEmployees();
+            });
+          });
+
+          const item = document.createElement('div');
+          item.className = 'admin-shift-employee-item';
+          item.appendChild(btn);
+          item.appendChild(removeBtn);
+          employeeList.appendChild(item);
+          visibleCount += 1;
         });
 
         if (newcomerEntry) {
@@ -57893,6 +58047,13 @@ window.collectPrintDiagnostics = function(stage){
             openAdminShiftEmployeeChoiceDialog(newcomerEntry.label, newcomerEntry.url);
           });
           employeeList.appendChild(specialBtn);
+        }
+
+        if (visibleCount === 0 && !newcomerEntry) {
+          const empty = document.createElement('p');
+          empty.className = 'admin-shift-employee-empty';
+          empty.textContent = '表示中の個別フォームはありません。Web側のキャッシュを完全にクリアすると、非表示にした人物名を元に戻せます。';
+          employeeList.appendChild(empty);
         }
       };
 
