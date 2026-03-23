@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>業務効率化ツール バージョン2.0 ベータ</title>
+  <title>神戸三宮 業務効率化ツール</title>
+  <meta property="og:title" content="神戸三宮 業務効率化ツール" />
+  <meta name="twitter:title" content="神戸三宮 業務効率化ツール" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56612,6 +56614,7 @@ window.collectPrintDiagnostics = function(stage){
     ];
     let adminShiftScreenBound = false;
     let adminShiftAutoPhoneEntry = false;
+    let adminShiftFormPanelController = null;
 
     function getActiveLoginDeviceKind() {
       const raw = String(document.body?.getAttribute('data-login-device-kind') || '').trim().toLowerCase();
@@ -56658,6 +56661,9 @@ window.collectPrintDiagnostics = function(stage){
       screen.classList.toggle('hidden', !enabled);
       screen.classList.toggle('is-active', enabled);
       screen.setAttribute('aria-hidden', enabled ? 'false' : 'true');
+      if (typeof adminShiftFormPanelController === 'function') {
+        adminShiftFormPanelController(enabled && getActiveLoginDeviceKind() === 'phone');
+      }
     }
 
     function adminShiftOpenExternalUrl(targetUrl = '') {
@@ -57376,6 +57382,7 @@ window.collectPrintDiagnostics = function(stage){
           });
         }
       };
+      adminShiftFormPanelController = setFormPanelOpen;
 
       individualBtn.addEventListener('click', () => {
         const next = formPanel.classList.contains('hidden');
