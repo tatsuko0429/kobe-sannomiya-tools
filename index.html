@@ -13102,12 +13102,24 @@
   }
   .admin-shift-title{
     margin:0;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:0 .34em;
     font-size:clamp(30px, 3.6vw, 44px);
     line-height:1.2;
     color:#0b1f4b;
     font-weight:900;
     letter-spacing:.03em;
     text-shadow:0 2px 0 rgba(255,255,255,.85);
+  }
+  .admin-shift-title-store,
+  .admin-shift-title-main{
+    display:inline-block;
+  }
+  .admin-shift-title-main{
+    min-width:0;
+    word-break:keep-all;
   }
   .admin-shift-lead{
     margin:12px 0 0;
@@ -13327,6 +13339,11 @@
     overflow:auto;
   }
   @media (max-width: 760px){
+    .admin-shift-title{
+      gap:0 .2em;
+      font-size:clamp(24px, 6.8vw, 31px);
+      line-height:1.26;
+    }
     .admin-shift-shell{
       padding:16px 14px 14px;
       border-radius:16px;
@@ -13385,6 +13402,9 @@
     flex-direction:column;
     overflow:hidden;
   }
+  body.is-admin-shift[data-login-device-kind="phone"] .admin-shift-form-panel.hidden{
+    display:none !important;
+  }
   body.is-admin-shift[data-login-device-kind="phone"] .admin-shift-employee-list{
     flex:1 1 auto;
     min-height:0;
@@ -13393,6 +13413,14 @@
     align-content:start;
     overscroll-behavior:contain;
     -webkit-overflow-scrolling:touch;
+  }
+  .admin-shift-notice-blue{
+    color:#2563eb;
+    font-weight:900;
+  }
+  .admin-shift-notice-red{
+    color:#dc2626;
+    font-weight:900;
   }
   .login-admin-panel{
     width:min(92vw, 520px);
@@ -28565,7 +28593,7 @@ init();
 
   <section id="admin-shift-screen" class="hidden" aria-hidden="true">
     <div class="admin-shift-shell">
-      <h2 class="admin-shift-title">神戸三宮店　調理場シフト管理ツール</h2>
+      <h2 class="admin-shift-title"><span class="admin-shift-title-store">神戸三宮店</span><span class="admin-shift-title-main">調理場シフト管理ツール</span></h2>
       <p class="admin-shift-lead">役職者向けの責任者専用画面です。</p>
 
       <div class="admin-shift-action-grid">
@@ -56696,6 +56724,7 @@ window.collectPrintDiagnostics = function(stage){
       modalId = 'admin-shift-confirm-modal',
       title = '確認',
       message = '',
+      messageHtml = '',
       confirmLabel = '進む',
       cancelLabel = '戻る',
       onConfirm = null,
@@ -56706,6 +56735,7 @@ window.collectPrintDiagnostics = function(stage){
       const safeId = String(modalId || 'admin-shift-confirm-modal').trim() || 'admin-shift-confirm-modal';
       const safeTitle = String(title || '確認').trim() || '確認';
       const safeMessage = String(message || '').trim();
+      const safeMessageHtml = String(messageHtml || '').trim();
       const safeQrUrl = String(qrFallbackUrl || '').trim();
 
       const existing = document.getElementById(safeId);
@@ -56748,7 +56778,6 @@ window.collectPrintDiagnostics = function(stage){
       head.style.textAlign = 'center';
 
       const body = document.createElement('p');
-      body.textContent = safeMessage;
       body.style.margin = '14px 2px 0';
       body.style.whiteSpace = 'pre-wrap';
       body.style.wordBreak = 'break-word';
@@ -56756,6 +56785,11 @@ window.collectPrintDiagnostics = function(stage){
       body.style.fontSize = '18px';
       body.style.fontWeight = '700';
       body.style.lineHeight = '1.75';
+      if (safeMessageHtml) {
+        body.innerHTML = safeMessageHtml;
+      } else {
+        body.textContent = safeMessage;
+      }
 
       const actions = document.createElement('div');
       actions.style.marginTop = '16px';
@@ -57260,10 +57294,8 @@ window.collectPrintDiagnostics = function(stage){
       return openAdminShiftCenteredConfirmDialog({
         modalId: 'admin-shift-phone-back-notice',
         title: 'ご利用時の注意',
-        message:
-`PCまたはタブレット端末での利用を前提に作成しています。
-スマートフォンでは正常に動作しない場合があることを、あらかじめご了承のうえ、パスコード入力画面にお進みください
-0880で起動します。`,
+        messageHtml:
+`この先の機能は、PCまたはタブレット端末での利用を前提に作成しています。<br><span class="admin-shift-notice-blue">スマートフォンでは正常に動作しない場合がある</span>ことを、あらかじめご了承のうえ、パスコード入力画面にお進みください。<br><span class="admin-shift-notice-red">0880で起動します。</span>`,
         confirmLabel: '進む',
         cancelLabel: '戻る',
         onConfirm
@@ -59103,6 +59135,11 @@ Macに近い表示になり、ツール全体が見やすくなります。`
       closeSpecialModal();
       closeAdminModal({ keepInput: true });
       if (loginDeviceKind === 'phone') {
+        try {
+          if (typeof applyScreenDimFilter === 'function') {
+            applyScreenDimFilter(0, { save: false });
+          }
+        } catch (_) {}
         setAdminShiftAutoPhoneEntry(true);
         unlock({ mode: 'admin', persistSession: false, animate: false, skipUntil: 0 });
         return;
