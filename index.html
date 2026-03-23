@@ -1330,22 +1330,101 @@
         border-color var(--motion-duration-base) var(--motion-ease-settle) var(--motion-tone-delay),
         box-shadow var(--motion-duration-base) var(--motion-ease-settle) var(--motion-tone-delay);
     }
-    body[data-phone-admin-return-ui="1"]{
-      overflow-x:auto;
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"]{
+      overflow-x:hidden;
     }
-    body[data-phone-admin-return-ui="1"] #app-main-root{
-      overflow-x:auto;
-    }
-    body[data-phone-admin-return-ui="1"] #workspace-shell{
-      overflow-x:auto;
-      overflow-y:auto;
-      -webkit-overflow-scrolling:touch;
-      scrollbar-gutter:auto;
-    }
-    body[data-phone-admin-return-ui="1"] #workspace-shell > [id^="sec-"]:not(.hidden){
-      min-width:var(--workspace-phone-return-min-width, 1080px);
-      width:max-content;
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #app-main-root{
+      width:100%;
       max-width:none;
+      padding:12px 10px 18px;
+      overflow-x:hidden;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #workspace-shell{
+      padding:14px 12px 16px;
+      overflow:visible;
+      scrollbar-gutter:stable;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #workspace-shell > [id^="sec-"]:not(.hidden){
+      min-width:0;
+      width:100%;
+      max-width:100%;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #app-footer{
+      padding:14px 10px calc(14px + env(safe-area-inset-bottom));
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #app-footer-inner{
+      align-items:flex-start;
+      gap:10px;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #app-footer-actions{
+      width:100%;
+      margin-left:0;
+      flex-wrap:wrap;
+      align-items:stretch;
+      justify-content:flex-start;
+      gap:8px;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #app-footer-actions > button,
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #app-footer-actions > div{
+      flex:0 0 auto;
+      max-width:100%;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #app-footer-actions > .relative{
+      flex:1 1 100%;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #share-tool-mail-btn,
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #clear-cache-btn,
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #sound-toggle,
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #app-footer-contact{
+      flex:1 1 100%;
+      min-height:42px;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #share-tool-mail-btn,
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #clear-cache-btn,
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #sound-toggle{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 12px;
+      line-height:1.28;
+      white-space:normal;
+      text-align:center;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #tablet-optimize-toggle,
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #color-boost-toggle{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:40px;
+      padding:7px 10px;
+      font-size:11px;
+      text-align:center;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #screen-dim-toggle{
+      flex:0 0 40px;
+      align-self:center;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #app-footer-contact{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:100%;
+      gap:10px;
+      padding:10px 12px;
+      text-align:center;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #app-footer-contact span:last-child{
+      min-width:0;
+      overflow-wrap:anywhere;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #share-tool-mail-btn,
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #clear-cache-btn,
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #sound-toggle,
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #app-footer-contact,
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #tool-tab-bar .tab-btn,
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #floating-tool-tab-bar .tab-btn{
+      word-break:keep-all;
+      overflow-wrap:anywhere;
     }
     #workspace-shell::before,
     #workspace-shell::after{
@@ -1757,14 +1836,14 @@
       body.display-mode-tablet #tool-tab-bar{
         zoom:var(--workspace-tablet-zoom, .54);
       }
-      body[data-phone-admin-return-ui="1"]:not(.tool-focus-mode){
-        --workspace-screen-zoom:var(--workspace-phone-return-zoom, .46);
+      body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"]:not(.tool-focus-mode){
+        --workspace-screen-zoom:1;
       }
-      body[data-phone-admin-return-ui="1"] #tool-tab-bar{
-        zoom:var(--workspace-phone-return-tab-zoom, .72);
+      body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #tool-tab-bar{
+        zoom:1;
       }
-      body[data-phone-admin-return-ui="1"] #floating-tool-tab-bar .floating-tool-tab-inner{
-        zoom:var(--workspace-phone-return-tab-zoom, .72);
+      body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #floating-tool-tab-bar .floating-tool-tab-inner{
+        zoom:1;
       }
       body.tool-focus-mode{
         --workspace-screen-zoom:1;
@@ -2058,6 +2137,25 @@
     #floating-tool-tab-bar .tab-btn{
       flex:0 0 auto;
       white-space:nowrap;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #tool-tab-bar{
+      gap:6px;
+      padding:0 0 2px;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #tool-tab-bar .tab-btn,
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #floating-tool-tab-bar .tab-btn{
+      padding:0.62rem 0.78rem;
+      font-size:0.82rem;
+      line-height:1.18;
+      border-top-width:3px;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #floating-tool-tab-bar{
+      bottom:calc(8px + env(safe-area-inset-bottom));
+      padding:0 8px;
+    }
+    body[data-phone-admin-return-ui="1"][data-login-device-kind="phone"] #floating-tool-tab-bar .floating-tool-tab-inner{
+      max-width:calc(100vw - 16px);
+      padding:0 2px;
     }
     body.tool-focus-mode #floating-tool-tab-bar{
       bottom:8px;
@@ -28785,12 +28883,12 @@ init();
   </section>
 
   <footer id="app-footer" class="header-panel border-t border-slate-200 p-6 no-print">
-    <div class="max-w-[1600px] mx-auto flex flex-wrap justify-between items-center gap-3">
+    <div id="app-footer-inner" class="max-w-[1600px] mx-auto flex flex-wrap justify-between items-center gap-3">
       <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
         <p class="text-sm text-slate-400 font-medium tracking-tight">© 2026 かに道楽 神戸三宮店</p>
         <p id="last-tool-output-timestamp" aria-live="polite">このツールの最終出力: --</p>
       </div>
-      <div class="flex items-center gap-2 ml-auto">
+      <div id="app-footer-actions" class="flex items-center gap-2 ml-auto">
         <button
           id="share-tool-mail-btn"
           onclick="openToolShareEmail()"
@@ -28812,7 +28910,7 @@ init();
         </button>
         <button id="sound-toggle" onclick="toggleSound()" class="clickable sound-toggle no-print px-3 py-2 rounded-lg text-xs font-bold bg-slate-800 text-white shadow-md hover:bg-slate-900 active:translate-y-[1px]" type="button" title="操作音オン／オフ" aria-pressed="false">🔇 操作音 オフ</button>
         <div class="relative">
-          <div onclick="toggleContact()" class="clickable cursor-pointer flex items-center gap-3 bg-slate-50 hover:bg-white px-5 py-2.5 rounded-xl border border-slate-200 shadow-sm">
+          <div id="app-footer-contact" onclick="toggleContact()" class="clickable cursor-pointer flex items-center gap-3 bg-slate-50 hover:bg-white px-5 py-2.5 rounded-xl border border-slate-200 shadow-sm">
             <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">開発者：</span>
             <span class="font-bold text-slate-800 hover:text-red-600 underline underline-offset-4 decoration-red-200">西川巧真</span>
           </div>
@@ -29788,10 +29886,14 @@ init();
     const freeNameHistoryStorageKey = 'tool_free_name_history_v1';
     const freeNameHistoryMaxItems = 20;
     const freeNameHistorySeedStorageKey = 'tool_free_name_history_seed_v1';
+    const freeNameHistoryMailFaxSeedStorageKey = 'tool_free_name_history_mail_fax_seed_v1';
     const freeNameHistoryDefaultEntries = Object.freeze([
       '古河由依千',
       '髙田結唯',
       '山田亮汰郎'
+    ]);
+    const freeNameHistoryMailFaxDefaultEntries = Object.freeze([
+      '藤田 剛廣'
     ]);
     const shiftNameHistoryStorageKey = 'tool_shift_name_history_v1';
     const shiftFrontNameHistoryStorageKey = 'tool_shift_name_history_front_v1';
@@ -29942,6 +30044,37 @@ init();
       const list = freeNameHistoryRead().filter((item) => freeNameHistoryComparable(item) !== pickedKey);
       list.unshift(picked);
       return freeNameHistoryWrite(list);
+    }
+
+    function freeNameHistoryEnsureEntry(name, { atFront = false } = {}) {
+      const picked = freeNameNormalize(name);
+      const pickedKey = freeNameHistoryComparable(picked);
+      if (!pickedKey) return freeNameHistoryRead();
+      const list = freeNameHistoryRead().filter((item) => freeNameHistoryComparable(item) !== pickedKey);
+      if (atFront) {
+        list.unshift(picked);
+      } else {
+        list.push(picked);
+      }
+      return freeNameHistoryWrite(list);
+    }
+
+    function seedMailFaxFreeNameHistoryDefaultsOnce() {
+      let shouldSeed = false;
+      try {
+        shouldSeed = window.localStorage?.getItem(freeNameHistoryMailFaxSeedStorageKey) !== '1';
+      } catch (_) {
+        shouldSeed = true;
+      }
+      if (!shouldSeed) return freeNameHistoryRead();
+      let list = freeNameHistoryRead();
+      freeNameHistoryMailFaxDefaultEntries.forEach((name) => {
+        list = freeNameHistoryEnsureEntry(name);
+      });
+      try {
+        window.localStorage?.setItem(freeNameHistoryMailFaxSeedStorageKey, '1');
+      } catch (_) {}
+      return list;
     }
 
     function freeNameHistoryRemove(name) {
@@ -45849,7 +45982,7 @@ init();
         'ヘイン'
       ]),
       kitchen: Object.freeze([
-        '藤田',
+        '藤田 剛廣',
         '西川　巧真',
         '藤井　豊',
         '古河　由依千',
@@ -52228,6 +52361,7 @@ init();
       initMailStorePresetModal();
       initStoreSyncStateFromStorage();
       restoreMailStoreSuffixFromStorage();
+      seedMailFaxFreeNameHistoryDefaultsOnce();
       mailEnsureAddressHistoryEntry(mailToHistoryStorageKey, 'uniform', mailUniformLegacyTo);
       renderMailStoreSuffixCurrent();
       renderStoreSuffixLockState();
@@ -53368,6 +53502,9 @@ window.collectPrintDiagnostics = function(stage){
 
       try{
         setDebug("");
+        if (typeof seedMailFaxFreeNameHistoryDefaultsOnce === "function") {
+          seedMailFaxFreeNameHistoryDefaultsOnce();
+        }
         initSenderOptions();
         bindEvents();
         const restoredDraft = faxRestoreDraftFromStorage();
@@ -57687,6 +57824,7 @@ window.collectPrintDiagnostics = function(stage){
       const appUpdateConfirmMessage = 'アプリの最新バージョンをインストールするページを開きます。\nお間違いなければ「進む」をクリックしてください。';
       const specialMessage = '…なぜ僕の誕生日がわかったのですか！？';
       const loginSkipStorageKey = 'tool_login_skip_until_v1';
+      const loginSkipContextStorageKey = 'tool_login_skip_context_v1';
       const loginIntroSeenStorageKey = 'tool_login_intro_seen_v1';
       const loginSkipDurationMs = 30 * 60 * 1000;
       const LOGIN_INTRO_ENVELOPE_MS = 4400;
@@ -57835,10 +57973,66 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         }
       };
 
-      const clearLoginSkipUntil = () => {
+      const normalizeLoginSkipContext = (raw = null) => {
+        const source = (raw && typeof raw === 'object') ? raw : {};
+        const normalized = normalizeLoginUnlockContext(source);
+        const expiresAt = Math.max(0, Math.floor(Number(source.expiresAt) || 0));
+        const mode = source.mode === 'admin' ? 'admin' : 'default';
+        return {
+          expiresAt,
+          mode,
+          deviceKind: normalized.deviceKind,
+          isPhone: normalized.isPhone,
+          isTablet: normalized.isTablet,
+          isMobileTablet: normalized.isMobileTablet,
+          usedInAppPasscodePad: normalized.usedInAppPasscodePad,
+          phoneAdminReturnUiEnabled: !!source.phoneAdminReturnUiEnabled
+        };
+      };
+
+      const readLoginSkipContext = () => {
+        try {
+          const raw = window.localStorage?.getItem(loginSkipContextStorageKey);
+          if (!raw) return null;
+          return normalizeLoginSkipContext(JSON.parse(raw));
+        } catch (_) {
+          return null;
+        }
+      };
+
+      const writeLoginSkipContext = (context = null) => {
+        const normalized = normalizeLoginSkipContext(context);
+        if (!(normalized.expiresAt > 0)) return false;
+        const payload = {
+          expiresAt: normalized.expiresAt,
+          mode: normalized.mode,
+          deviceKind: normalized.deviceKind,
+          usedInAppPasscodePad: normalized.usedInAppPasscodePad,
+          phoneAdminReturnUiEnabled: normalized.phoneAdminReturnUiEnabled
+        };
+        try {
+          window.localStorage?.setItem(loginSkipContextStorageKey, JSON.stringify(payload));
+          return true;
+        } catch (_) {
+          return false;
+        }
+      };
+
+      const clearLoginSkipContext = () => {
+        try {
+          window.localStorage?.removeItem(loginSkipContextStorageKey);
+        } catch (_) {}
+      };
+
+      const clearLoginSkipState = () => {
         try {
           window.localStorage?.removeItem(loginSkipStorageKey);
         } catch (_) {}
+        clearLoginSkipContext();
+      };
+
+      const clearLoginSkipUntil = () => {
+        clearLoginSkipState();
       };
 
       const getValidLoginSkipUntil = () => {
@@ -57847,6 +58041,29 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         if (until > now) return until;
         clearLoginSkipUntil();
         return 0;
+      };
+
+      const getValidLoginSkipContext = (fallbackUntil = 0) => {
+        const now = Date.now();
+        const until = Math.max(0, Math.floor(Number(fallbackUntil) || 0));
+        if (until <= now) {
+          clearLoginSkipState();
+          return null;
+        }
+        const stored = readLoginSkipContext();
+        if (!stored) return null;
+        if (stored.mode !== 'default') {
+          clearLoginSkipState();
+          return null;
+        }
+        if (stored.expiresAt > 0 && stored.expiresAt <= now) {
+          clearLoginSkipState();
+          return null;
+        }
+        return {
+          ...stored,
+          expiresAt: until
+        };
       };
 
       const hasSeenLoginIntro = () => {
@@ -58265,6 +58482,28 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         isMobileTablet: loginDeviceKind === 'phone' || loginDeviceKind === 'tablet',
         usedInAppPasscodePad: usedInAppPasscodePad
       });
+
+      const buildLoginSkipContext = (expiresAt = 0, mode = 'default') => ({
+        ...getUnlockContext(),
+        expiresAt: Math.max(0, Math.floor(Number(expiresAt) || 0)),
+        mode: mode === 'admin' ? 'admin' : 'default',
+        phoneAdminReturnUiEnabled: isPhoneAdminReturnUiEnabled()
+      });
+
+      const applyLoginSkipContext = (context = null) => {
+        const normalized = normalizeLoginSkipContext(context);
+        loginDeviceKind = normalized.deviceKind;
+        usedInAppPasscodePad = normalized.usedInAppPasscodePad;
+        if (gate instanceof HTMLElement) {
+          gate.setAttribute('data-login-device-kind', loginDeviceKind);
+        }
+        if (document.body) {
+          document.body.setAttribute('data-login-device-kind', loginDeviceKind);
+        }
+        setPhoneAdminReturnUiPending(false);
+        setPhoneAdminReturnUiEnabled(normalized.phoneAdminReturnUiEnabled);
+        return normalized;
+      };
 
       const syncDots = () => {
         const length = pinBuffer.length;
@@ -58950,6 +59189,10 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         unlocked = false;
         attemptCount = 0;
         usedInAppPasscodePad = false;
+        if (clearSkip) {
+          setPhoneAdminReturnUiPending(false);
+          setPhoneAdminReturnUiEnabled(false);
+        }
         prankRunning = false;
         rejectAnimating = false;
         specialModalOpen = false;
@@ -59045,8 +59288,10 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         const targetUntil = shouldPersistSession ? (now + loginSkipDurationMs) : Math.floor(Number(skipUntil) || 0);
         if (shouldPersistSession) {
           writeLoginSkipUntil(targetUntil);
+          writeLoginSkipContext(buildLoginSkipContext(targetUntil, targetMode));
         } else if (targetMode === 'admin') {
           clearLoginSkipUntil();
+          setPhoneAdminReturnUiEnabled(false);
         }
         if (targetUntil > now) {
           scheduleLoginRelock(targetUntil);
@@ -59370,6 +59615,18 @@ Macに近い表示になり、ツール全体が見やすくなります。`
       resetPrankVisuals(true);
       closeSpecialModal();
       closeAdminModal({ keepInput: true });
+      const validSkipUntil = getValidLoginSkipUntil();
+      const validSkipContext = getValidLoginSkipContext(validSkipUntil);
+      if (validSkipContext) {
+        if (validSkipContext.deviceKind !== loginDeviceKind) {
+          clearLoginSkipUntil();
+        } else {
+          applyLoginSkipContext(validSkipContext);
+          setAdminShiftAutoPhoneEntry(false);
+          unlock({ persistSession: false, animate: false, skipUntil: validSkipUntil });
+          return;
+        }
+      }
       if (loginDeviceKind === 'phone') {
         try {
           if (typeof applyScreenDimFilter === 'function') {
@@ -59381,7 +59638,6 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         return;
       }
       setAdminShiftAutoPhoneEntry(false);
-      const validSkipUntil = getValidLoginSkipUntil();
       if (validSkipUntil > Date.now()) {
         unlock({ persistSession: false, animate: false, skipUntil: validSkipUntil });
       } else {
