@@ -2381,10 +2381,37 @@
       z-index:1;
       align-items:start;
     }
+    body[data-mobile-passcode-tools-layout="1"] #sec-email > .mail-composer-grid{
+      align-items:start;
+    }
     #sec-email .mail-control-rail,
     #sec-email .mail-composer-pane{
       position:relative;
       z-index:1;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #sec-email .mail-control-rail{
+      order:2;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #sec-email .mail-composer-pane{
+      order:1;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #sec-email .mail-composer-pane > :not([hidden]) ~ :not([hidden]){
+      margin-top:0 !important;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #sec-email .mail-mobile-top-actions{
+      order:1;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #sec-email .mail-panel-body{
+      order:2;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #sec-email .mail-panel-subject{
+      order:3;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #sec-email .mail-panel-address{
+      order:4;
     }
     #sec-email .mail-panel{
       position:relative;
@@ -7175,6 +7202,22 @@
       padding:14px;
       box-shadow: var(--shadow-1);
     }
+    body[data-mobile-passcode-tools-layout="1"] #menu-control-panel{
+      order:2;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #menu-preview-panel{
+      order:1;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #menu-preview-panel > .menu-mobile-top-actions{
+      order:1;
+      margin-top:0 !important;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #menu-preview-panel > .menu-preview-wrap{
+      order:2;
+    }
     .menu-preview-inputs{
       display:grid;
       grid-template-columns: 220px 1fr;
@@ -7922,6 +7965,27 @@
       display:none;
       gap:8px;
       margin-bottom:10px;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #shift-input-panel{
+      order:2;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #shift-preview-panel{
+      order:1;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #shift-preview-panel .shift-print-actions{
+      order:1;
+      margin-bottom:0 !important;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #shift-preview-panel .shift-preview-top-actions{
+      order:2;
+      margin-bottom:0;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #shift-preview-panel .shift-preview-caption{
+      order:3;
+      margin-bottom:0 !important;
+    }
+    body[data-mobile-passcode-tools-layout="1"] #shift-preview-panel .shift-preview-shell{
+      order:4;
     }
     .shift-preview-action-btn{
       border:1px solid rgba(148,163,184,.55);
@@ -13066,6 +13130,8 @@
   }
   body.is-admin-shift[data-login-device-kind="phone"]{
     overflow:hidden;
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
   }
   body.is-admin-shift #sky-mode-toggle{
     display:none !important;
@@ -13397,12 +13463,45 @@
     flex-direction:column;
     overflow:hidden;
   }
+  body.is-admin-shift[data-login-device-kind="phone"] .admin-shift-title{
+    gap:0 .14em;
+    font-size:clamp(20px, 5.8vw, 25px);
+    line-height:1.16;
+    letter-spacing:.015em;
+  }
+  body.is-admin-shift[data-login-device-kind="phone"] .admin-shift-lead{
+    margin-top:10px;
+    font-size:13px;
+    line-height:1.58;
+    letter-spacing:0;
+    text-wrap:pretty;
+    line-break:strict;
+  }
+  body.is-admin-shift[data-login-device-kind="phone"] .admin-shift-action-btn{
+    padding:12px 12px;
+    font-size:14px;
+    line-height:1.32;
+    letter-spacing:.01em;
+  }
   body.is-admin-shift[data-login-device-kind="phone"] .admin-shift-form-panel{
     flex:1 1 auto;
     min-height:0;
     display:flex;
     flex-direction:column;
     overflow:hidden;
+    padding:14px 12px 12px;
+  }
+  body.is-admin-shift[data-login-device-kind="phone"] .admin-shift-form-title{
+    font-size:16px;
+    line-height:1.35;
+    letter-spacing:.01em;
+  }
+  body.is-admin-shift[data-login-device-kind="phone"] .admin-shift-form-note{
+    font-size:12px;
+    line-height:1.55;
+    letter-spacing:0;
+    text-wrap:pretty;
+    line-break:strict;
   }
   body.is-admin-shift[data-login-device-kind="phone"] .admin-shift-form-panel.hidden{
     display:none !important;
@@ -13415,6 +13514,22 @@
     align-content:start;
     overscroll-behavior:contain;
     -webkit-overflow-scrolling:touch;
+  }
+  body.is-admin-shift[data-login-device-kind="phone"] .admin-shift-employee-btn{
+    min-height:44px;
+    padding:10px;
+    font-size:13px;
+    line-height:1.42;
+    letter-spacing:0;
+    text-wrap:pretty;
+    line-break:strict;
+  }
+  body.is-admin-shift[data-login-device-kind="phone"] .admin-shift-special-note{
+    font-size:12px;
+    line-height:1.45;
+    letter-spacing:0;
+    text-wrap:pretty;
+    line-break:strict;
   }
   .admin-shift-notice-blue{
     color:#2563eb;
@@ -14283,7 +14398,7 @@
                 </div>
               </div>
             </div>
-            <div class="mt-3 no-print">
+            <div class="menu-mobile-top-actions mt-3 no-print">
               <label class="menu-preview-input-group mb-3">
                 <span class="menu-preview-input-label">今回のお品書きの金額設定</span>
                 <input id="menu-price-input" type="number" min="0" step="1" inputmode="numeric" class="menu-preview-input" placeholder="例：8000">
@@ -14460,7 +14575,7 @@
               </div>
             </div>
 
-            <div class="flex flex-wrap gap-3">
+            <div class="mail-mobile-top-actions flex flex-wrap gap-3">
               <button id="btn-mailto" class="clickable mail-launch-trigger bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-bold mail-primary-action">✉️ メール作成（メールアプリ起動）</button>
               <button id="btn-copy-body" class="clickable bg-slate-700 hover:bg-black text-white px-6 py-3 rounded-lg font-bold mail-secondary-action">📋 本文コピー</button>
               <button id="btn-free-record" type="button" class="clickable hidden bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-bold mail-accent-action">📝 この内容をテンプレート化する</button>
@@ -14679,10 +14794,10 @@
             <div class="shift-preview-top-actions no-print">
               <button id="shift-back-edit-btn" type="button" class="shift-preview-action-btn">入力に戻る</button>
             </div>
-            <div class="mb-2 no-print">
+            <div class="shift-print-actions mb-2 no-print">
               <button id="shift-print-btn" type="button" class="clickable w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-extrabold tracking-wide shadow-lg">🖨 印刷</button>
             </div>
-            <div class="text-sm font-semibold text-slate-700 mb-2 no-print">印刷プレビュー（A4）</div>
+            <div class="shift-preview-caption text-sm font-semibold text-slate-700 mb-2 no-print">印刷プレビュー（A4）</div>
             <div class="shift-preview-shell">
               <div id="shift-preview-stage" class="shift-preview-stage">
                 <div id="shift-preview-page" class="shift-preview-page" aria-label="人事配置表プレビュー">
@@ -56212,6 +56327,10 @@ window.collectPrintDiagnostics = function(stage){
 
     function bootApp(loginContext = null) {
       const normalizedLoginContext = normalizeLoginUnlockContext(loginContext);
+      const useMobilePasscodeToolLayout = normalizedLoginContext.isMobileTablet && normalizedLoginContext.usedInAppPasscodePad;
+      if (document.body) {
+        document.body.setAttribute('data-mobile-passcode-tools-layout', useMobilePasscodeToolLayout ? '1' : '0');
+      }
       if (window.__appBooted) {
         setAdminShiftMode(false);
         return;
@@ -56743,6 +56862,7 @@ window.collectPrintDiagnostics = function(stage){
       const safeMessage = String(message || '').trim();
       const safeMessageHtml = String(messageHtml || '').trim();
       const safeQrUrl = String(qrFallbackUrl || '').trim();
+      const isPhone = getActiveLoginDeviceKind() === 'phone';
 
       const existing = document.getElementById(safeId);
       if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
@@ -56755,42 +56875,45 @@ window.collectPrintDiagnostics = function(stage){
       overlay.style.display = 'flex';
       overlay.style.alignItems = 'center';
       overlay.style.justifyContent = 'center';
-      overlay.style.padding = '18px';
+      overlay.style.padding = isPhone ? '12px' : '18px';
       overlay.style.background = 'rgba(2,6,23,.58)';
       overlay.style.backdropFilter = 'blur(4px)';
 
       const panel = document.createElement('div');
-      panel.style.width = 'min(820px, calc(100vw - 24px))';
-      panel.style.maxHeight = 'min(84vh, 820px)';
+      panel.style.width = isPhone ? 'min(100%, calc(100vw - 16px))' : 'min(820px, calc(100vw - 24px))';
+      panel.style.maxHeight = isPhone ? 'min(88vh, 760px)' : 'min(84vh, 820px)';
       panel.style.overflowY = 'auto';
       panel.style.background = 'linear-gradient(180deg, #ffffff 0%, #f8fbff 100%)';
       panel.style.border = '1px solid rgba(37,99,235,.34)';
-      panel.style.borderRadius = '18px';
+      panel.style.borderRadius = isPhone ? '16px' : '18px';
       panel.style.boxShadow = '0 24px 54px rgba(2,6,23,.36), inset 0 1px 0 rgba(255,255,255,.9)';
-      panel.style.padding = '18px 18px 18px';
+      panel.style.padding = isPhone ? '14px 14px 16px' : '18px 18px 18px';
       panel.style.fontFamily = '"Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif';
 
       const head = document.createElement('h3');
       head.textContent = safeTitle;
       head.style.margin = '0';
-      head.style.padding = '12px 14px';
+      head.style.padding = isPhone ? '10px 12px' : '12px 14px';
       head.style.borderRadius = '12px';
       head.style.border = '1px solid rgba(59,130,246,.34)';
       head.style.background = 'linear-gradient(180deg, #f0f7ff 0%, #dbeafe 100%)';
       head.style.color = '#0f172a';
-      head.style.fontSize = '23px';
+      head.style.fontSize = isPhone ? '20px' : '23px';
       head.style.fontWeight = '900';
-      head.style.lineHeight = '1.4';
+      head.style.lineHeight = isPhone ? '1.3' : '1.4';
       head.style.textAlign = 'center';
 
       const body = document.createElement('p');
-      body.style.margin = '14px 2px 0';
+      body.style.margin = isPhone ? '12px 0 0' : '14px 2px 0';
       body.style.whiteSpace = 'pre-wrap';
       body.style.wordBreak = 'break-word';
+      body.style.lineBreak = 'strict';
+      body.style.setProperty('text-wrap', 'pretty');
+      body.style.letterSpacing = '.01em';
       body.style.color = '#0f172a';
-      body.style.fontSize = '18px';
+      body.style.fontSize = isPhone ? '15px' : '18px';
       body.style.fontWeight = '700';
-      body.style.lineHeight = '1.75';
+      body.style.lineHeight = isPhone ? '1.68' : '1.75';
       if (safeMessageHtml) {
         body.innerHTML = safeMessageHtml;
       } else {
@@ -56798,10 +56921,10 @@ window.collectPrintDiagnostics = function(stage){
       }
 
       const actions = document.createElement('div');
-      actions.style.marginTop = '16px';
+      actions.style.marginTop = isPhone ? '14px' : '16px';
       actions.style.display = 'flex';
       actions.style.justifyContent = 'center';
-      actions.style.gap = '12px';
+      actions.style.gap = isPhone ? '10px' : '12px';
       actions.style.flexWrap = 'wrap';
       actions.style.alignItems = 'center';
 
@@ -56814,34 +56937,36 @@ window.collectPrintDiagnostics = function(stage){
       cancelBtn.type = 'button';
       cancelBtn.className = 'clickable';
       cancelBtn.textContent = String(cancelLabel || '戻る');
-      cancelBtn.style.minWidth = '150px';
-      cancelBtn.style.padding = '11px 18px';
+      cancelBtn.style.minWidth = isPhone ? '138px' : '150px';
+      cancelBtn.style.padding = isPhone ? '10px 14px' : '11px 18px';
       cancelBtn.style.borderRadius = '11px';
       cancelBtn.style.border = '1px solid #94a3b8';
       cancelBtn.style.background = 'linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%)';
       cancelBtn.style.color = '#0f172a';
-      cancelBtn.style.fontSize = '16px';
+      cancelBtn.style.fontSize = isPhone ? '15px' : '16px';
       cancelBtn.style.fontWeight = '800';
-      cancelBtn.style.height = '46px';
+      cancelBtn.style.height = isPhone ? '44px' : '46px';
       cancelBtn.style.lineHeight = '1.1';
       cancelBtn.style.alignSelf = 'center';
+      cancelBtn.style.flex = isPhone ? '1 1 140px' : '0 0 auto';
       cancelBtn.addEventListener('click', close);
 
       const confirmBtn = document.createElement('button');
       confirmBtn.type = 'button';
       confirmBtn.className = 'clickable';
       confirmBtn.textContent = String(confirmLabel || '進む');
-      confirmBtn.style.minWidth = '150px';
-      confirmBtn.style.padding = '11px 18px';
+      confirmBtn.style.minWidth = isPhone ? '138px' : '150px';
+      confirmBtn.style.padding = isPhone ? '10px 14px' : '11px 18px';
       confirmBtn.style.borderRadius = '11px';
       confirmBtn.style.border = '1px solid #1d4ed8';
       confirmBtn.style.background = 'linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%)';
       confirmBtn.style.color = '#ffffff';
-      confirmBtn.style.fontSize = '16px';
+      confirmBtn.style.fontSize = isPhone ? '15px' : '16px';
       confirmBtn.style.fontWeight = '900';
-      confirmBtn.style.height = '46px';
+      confirmBtn.style.height = isPhone ? '44px' : '46px';
       confirmBtn.style.lineHeight = '1.1';
       confirmBtn.style.alignSelf = 'center';
+      confirmBtn.style.flex = isPhone ? '1 1 140px' : '0 0 auto';
       confirmBtn.addEventListener('click', () => {
         close();
         if (typeof onConfirm === 'function') {
@@ -56851,8 +56976,8 @@ window.collectPrintDiagnostics = function(stage){
 
       const qrWrap = document.createElement('div');
       qrWrap.style.display = 'none';
-      qrWrap.style.marginTop = '14px';
-      qrWrap.style.padding = '14px';
+      qrWrap.style.marginTop = isPhone ? '12px' : '14px';
+      qrWrap.style.padding = isPhone ? '12px' : '14px';
       qrWrap.style.borderRadius = '12px';
       qrWrap.style.border = '1px solid rgba(30,58,95,.25)';
       qrWrap.style.background = 'rgba(255,255,255,.88)';
@@ -56860,17 +56985,19 @@ window.collectPrintDiagnostics = function(stage){
       const qrDesc = document.createElement('p');
       qrDesc.textContent = String(qrDescription || '').trim() || 'スマートフォンでQRコードを読み取ってアクセスしてください。';
       qrDesc.style.margin = '0 0 12px';
-      qrDesc.style.fontSize = '15px';
+      qrDesc.style.fontSize = isPhone ? '14px' : '15px';
       qrDesc.style.fontWeight = '700';
-      qrDesc.style.lineHeight = '1.7';
+      qrDesc.style.lineHeight = isPhone ? '1.6' : '1.7';
       qrDesc.style.color = '#0f172a';
       qrDesc.style.whiteSpace = 'pre-wrap';
+      qrDesc.style.lineBreak = 'strict';
+      qrDesc.style.setProperty('text-wrap', 'pretty');
 
       const qrImg = document.createElement('img');
       qrImg.alt = `${safeTitle}用QRコード`;
-      qrImg.style.width = '280px';
-      qrImg.style.height = '280px';
-      qrImg.style.maxWidth = 'min(100%, 280px)';
+      qrImg.style.width = isPhone ? '240px' : '280px';
+      qrImg.style.height = isPhone ? '240px' : '280px';
+      qrImg.style.maxWidth = isPhone ? 'min(100%, 240px)' : 'min(100%, 280px)';
       qrImg.style.display = 'none';
       qrImg.style.margin = '0 auto';
       qrImg.style.border = '6px solid #ffffff';
@@ -56881,7 +57008,7 @@ window.collectPrintDiagnostics = function(stage){
       const qrStatus = document.createElement('p');
       qrStatus.style.margin = '8px 0 0';
       qrStatus.style.textAlign = 'center';
-      qrStatus.style.fontSize = '14px';
+      qrStatus.style.fontSize = isPhone ? '13px' : '14px';
       qrStatus.style.fontWeight = '700';
       qrStatus.style.color = '#334155';
       qrStatus.textContent = '';
@@ -56895,7 +57022,7 @@ window.collectPrintDiagnostics = function(stage){
       qrFallbackLink.style.width = '100%';
       qrFallbackLink.style.marginTop = '8px';
       qrFallbackLink.style.textAlign = 'center';
-      qrFallbackLink.style.fontSize = '14px';
+      qrFallbackLink.style.fontSize = isPhone ? '13px' : '14px';
       qrFallbackLink.style.fontWeight = '700';
       qrFallbackLink.style.color = '#1d4ed8';
 
@@ -56980,19 +57107,19 @@ window.collectPrintDiagnostics = function(stage){
         qrBtn.textContent = String(qrFallbackButtonLabel || '開けない場合');
         qrBtn.style.width = 'auto';
         qrBtn.style.minWidth = '112px';
-        qrBtn.style.height = '46px';
+        qrBtn.style.height = isPhone ? '42px' : '46px';
         qrBtn.style.borderRadius = '999px';
         qrBtn.style.border = '2px solid #f59e0b';
         qrBtn.style.background = 'linear-gradient(180deg, #fef3c7 0%, #fdba74 100%)';
         qrBtn.style.color = '#7c2d12';
-        qrBtn.style.fontSize = '14px';
+        qrBtn.style.fontSize = isPhone ? '13px' : '14px';
         qrBtn.style.fontWeight = '900';
         qrBtn.style.lineHeight = '1.1';
         qrBtn.style.textAlign = 'center';
-        qrBtn.style.padding = '0 14px';
+        qrBtn.style.padding = isPhone ? '0 12px' : '0 14px';
         qrBtn.style.whiteSpace = 'nowrap';
         qrBtn.style.cursor = 'pointer';
-        qrBtn.style.flex = '0 0 auto';
+        qrBtn.style.flex = isPhone ? '0 0 100%' : '0 0 auto';
         qrBtn.addEventListener('click', () => {
           qrWrap.style.display = 'block';
           if (!qrAttempted || !qrLoaded) ensureQrImageLoaded();
@@ -57016,6 +57143,7 @@ window.collectPrintDiagnostics = function(stage){
     function openAdminShiftEmployeeChoiceDialog(name = '', url = '') {
       const label = String(name || '').trim() || '個別フォーム';
       const targetUrl = String(url || '').trim();
+      const isPhone = getActiveLoginDeviceKind() === 'phone';
       if (!targetUrl) {
         adminShiftNotify(`${label}のURLは未設定です。`);
         return false;
@@ -57033,47 +57161,50 @@ window.collectPrintDiagnostics = function(stage){
       overlay.style.display = 'flex';
       overlay.style.alignItems = 'center';
       overlay.style.justifyContent = 'center';
-      overlay.style.padding = '18px';
+      overlay.style.padding = isPhone ? '12px' : '18px';
       overlay.style.background = 'rgba(2, 6, 23, 0.6)';
       overlay.style.backdropFilter = 'blur(4px)';
 
       const panel = document.createElement('div');
-      panel.style.width = 'min(820px, calc(100vw - 24px))';
-      panel.style.maxHeight = 'min(84vh, 900px)';
+      panel.style.width = isPhone ? 'min(100%, calc(100vw - 16px))' : 'min(820px, calc(100vw - 24px))';
+      panel.style.maxHeight = isPhone ? 'min(88vh, 860px)' : 'min(84vh, 900px)';
       panel.style.overflowY = 'auto';
       panel.style.background = 'linear-gradient(180deg, #fbfdff 0%, #eef6ff 100%)';
       panel.style.border = '2px solid #1d4ed8';
-      panel.style.borderRadius = '18px';
+      panel.style.borderRadius = isPhone ? '16px' : '18px';
       panel.style.boxShadow = '0 24px 54px rgba(2,6,23,.34), inset 0 1px 0 rgba(255,255,255,.9)';
-      panel.style.padding = '18px 18px 18px';
+      panel.style.padding = isPhone ? '14px 14px 16px' : '18px 18px 18px';
       panel.style.color = '#0f172a';
       panel.style.fontFamily = '"Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif';
 
       const title = document.createElement('h4');
       title.textContent = label;
       title.style.margin = '0';
-      title.style.padding = '12px 14px';
+      title.style.padding = isPhone ? '10px 12px' : '12px 14px';
       title.style.border = '2px solid #bfdbfe';
       title.style.borderRadius = '12px';
       title.style.background = 'linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%)';
-      title.style.fontSize = '24px';
-      title.style.lineHeight = '1.35';
+      title.style.fontSize = isPhone ? '20px' : '24px';
+      title.style.lineHeight = isPhone ? '1.28' : '1.35';
       title.style.fontWeight = '900';
       title.style.color = '#0f172a';
+      title.style.lineBreak = 'strict';
+      title.style.setProperty('text-wrap', 'pretty');
 
       const text = document.createElement('p');
       text.textContent = '表示方法を選んでください。';
-      text.style.margin = '14px 2px 0';
-      text.style.fontSize = '19px';
+      text.style.margin = isPhone ? '12px 0 0' : '14px 2px 0';
+      text.style.fontSize = isPhone ? '15px' : '19px';
       text.style.fontWeight = '900';
-      text.style.lineHeight = '1.55';
+      text.style.lineHeight = isPhone ? '1.45' : '1.55';
       text.style.color = '#1e3a8a';
 
       const btnRow = document.createElement('div');
       btnRow.style.display = 'flex';
       btnRow.style.flexWrap = 'wrap';
-      btnRow.style.gap = '14px';
-      btnRow.style.marginTop = '16px';
+      btnRow.style.flexDirection = isPhone ? 'column' : 'row';
+      btnRow.style.gap = isPhone ? '10px' : '14px';
+      btnRow.style.marginTop = isPhone ? '14px' : '16px';
       btnRow.style.justifyContent = 'center';
       btnRow.style.alignItems = 'center';
 
@@ -57083,14 +57214,15 @@ window.collectPrintDiagnostics = function(stage){
       openBtn.textContent = 'このままURLを開く';
       openBtn.style.border = '2px solid #bfdbfe';
       openBtn.style.borderRadius = '12px';
-      openBtn.style.padding = '12px 24px';
+      openBtn.style.padding = isPhone ? '10px 14px' : '12px 24px';
       openBtn.style.background = 'linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%)';
       openBtn.style.color = '#f8fbff';
-      openBtn.style.fontSize = '22px';
+      openBtn.style.fontSize = isPhone ? '16px' : '22px';
       openBtn.style.fontWeight = '900';
       openBtn.style.lineHeight = '1.2';
-      openBtn.style.whiteSpace = 'nowrap';
+      openBtn.style.whiteSpace = isPhone ? 'normal' : 'nowrap';
       openBtn.style.cursor = 'pointer';
+      openBtn.style.width = isPhone ? '100%' : 'auto';
 
       const qrBtn = document.createElement('button');
       qrBtn.type = 'button';
@@ -57098,28 +57230,29 @@ window.collectPrintDiagnostics = function(stage){
       qrBtn.textContent = 'QRコードを表示する';
       qrBtn.style.border = '2px solid #dbeafe';
       qrBtn.style.borderRadius = '12px';
-      qrBtn.style.padding = '12px 24px';
+      qrBtn.style.padding = isPhone ? '10px 14px' : '12px 24px';
       qrBtn.style.background = 'linear-gradient(180deg, #60a5fa 0%, #2563eb 100%)';
       qrBtn.style.color = '#f8fbff';
-      qrBtn.style.fontSize = '22px';
+      qrBtn.style.fontSize = isPhone ? '16px' : '22px';
       qrBtn.style.fontWeight = '900';
       qrBtn.style.lineHeight = '1.2';
-      qrBtn.style.whiteSpace = 'nowrap';
+      qrBtn.style.whiteSpace = isPhone ? 'normal' : 'nowrap';
       qrBtn.style.cursor = 'pointer';
+      qrBtn.style.width = isPhone ? '100%' : 'auto';
 
       const openStatus = document.createElement('p');
       openStatus.style.display = 'none';
       openStatus.style.margin = '8px 0 0';
       openStatus.style.textAlign = 'center';
-      openStatus.style.fontSize = '15px';
+      openStatus.style.fontSize = isPhone ? '13px' : '15px';
       openStatus.style.fontWeight = '800';
       openStatus.style.color = '#7f1d1d';
       openStatus.textContent = 'ポップアップがブロックされました。ブラウザ設定をご確認ください。';
 
       const qrWrap = document.createElement('div');
       qrWrap.style.display = 'none';
-      qrWrap.style.marginTop = '18px';
-      qrWrap.style.padding = '16px';
+      qrWrap.style.marginTop = isPhone ? '14px' : '18px';
+      qrWrap.style.padding = isPhone ? '12px' : '16px';
       qrWrap.style.borderRadius = '14px';
       qrWrap.style.border = '1px solid rgba(30,58,95,.25)';
       qrWrap.style.background = 'rgba(255,255,255,.88)';
@@ -57127,16 +57260,18 @@ window.collectPrintDiagnostics = function(stage){
       const qrDesc = document.createElement('p');
       qrDesc.textContent = 'デスクトップでうまく開かない場合は、お持ちのデバイスからQRコードを読み取り直接アクセスしてください';
       qrDesc.style.margin = '0 0 12px';
-      qrDesc.style.fontSize = '17px';
+      qrDesc.style.fontSize = isPhone ? '14px' : '17px';
       qrDesc.style.fontWeight = '800';
-      qrDesc.style.lineHeight = '1.6';
+      qrDesc.style.lineHeight = isPhone ? '1.55' : '1.6';
       qrDesc.style.color = '#0f172a';
+      qrDesc.style.lineBreak = 'strict';
+      qrDesc.style.setProperty('text-wrap', 'pretty');
 
       const qrImg = document.createElement('img');
       qrImg.alt = `${label}用QRコード`;
-      qrImg.style.width = '300px';
-      qrImg.style.height = '300px';
-      qrImg.style.maxWidth = 'min(100%, 300px)';
+      qrImg.style.width = isPhone ? '240px' : '300px';
+      qrImg.style.height = isPhone ? '240px' : '300px';
+      qrImg.style.maxWidth = isPhone ? 'min(100%, 240px)' : 'min(100%, 300px)';
       qrImg.style.display = 'none';
       qrImg.style.margin = '0 auto';
       qrImg.style.border = '6px solid #ffffff';
@@ -57147,7 +57282,7 @@ window.collectPrintDiagnostics = function(stage){
       const qrStatus = document.createElement('p');
       qrStatus.style.margin = '8px 0 0';
       qrStatus.style.textAlign = 'center';
-      qrStatus.style.fontSize = '15px';
+      qrStatus.style.fontSize = isPhone ? '13px' : '15px';
       qrStatus.style.fontWeight = '700';
       qrStatus.style.color = '#334155';
       qrStatus.textContent = '';
@@ -57161,7 +57296,7 @@ window.collectPrintDiagnostics = function(stage){
       qrFallbackLink.style.width = '100%';
       qrFallbackLink.style.marginTop = '8px';
       qrFallbackLink.style.textAlign = 'center';
-      qrFallbackLink.style.fontSize = '14px';
+      qrFallbackLink.style.fontSize = isPhone ? '13px' : '14px';
       qrFallbackLink.style.fontWeight = '700';
       qrFallbackLink.style.color = '#1d4ed8';
 
