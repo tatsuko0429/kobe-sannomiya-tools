@@ -57943,15 +57943,12 @@ window.collectPrintDiagnostics = function(stage){
     function openAdminShiftHideEmployeeConfirm(entry = null, onConfirm = null) {
       const row = entry && typeof entry === 'object' ? entry : {};
       const label = String(row.name || '').trim() || 'この人物';
+      const safeLabel = escapeHtml(label);
       return openAdminShiftCenteredConfirmDialog({
         modalId: 'admin-shift-hide-employee-confirm',
         title: '消去の確認',
-        message:
-`「${label}」を個別フォーム一覧から非表示にします。
-
-これを消去してしまうと、容易に復元することはできません。
-Web側のキャッシュを完全にクリアすると、データは復元されますが、
-本当に消去しても問題ないでしょうか？`,
+        messageHtml:
+`${safeLabel}さんを消去にします。<br><br><span class="admin-shift-notice-red">以後、容易に復元することはできません。</span><br><br>Web側のキャッシュを完全にクリアすると、データは復元されますが、、、<br><br>本当に問題ないでしょうか？`,
         confirmLabel: 'はい',
         cancelLabel: 'いいえ',
         onConfirm
@@ -59518,14 +59515,16 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         prankTimeouts.push(t);
       };
 
-      const lockGateWithPasscode = (messageText = '', { clearSkip = true } = {}) => {
+      const lockGateWithPasscode = (messageText = '', { clearSkip = true, preservePhoneAdminReturnUiPending = false } = {}) => {
         clearLoginRelockTimer();
         if (clearSkip) clearLoginSkipUntil();
         unlocked = false;
         attemptCount = 0;
         usedInAppPasscodePad = false;
         if (clearSkip) {
-          setPhoneAdminReturnUiPending(false);
+          if (!preservePhoneAdminReturnUiPending) {
+            setPhoneAdminReturnUiPending(false);
+          }
           setPhoneAdminReturnUiEnabled(false);
         }
         prankRunning = false;
@@ -59584,7 +59583,6 @@ Macに近い表示になり、ツール全体が見やすくなります。`
         if (
           targetMode === 'default' &&
           loginDeviceKind === 'phone' &&
-          usedInAppPasscodePad &&
           isPhoneAdminReturnUiPending()
         ) {
           setPhoneAdminReturnUiPending(false);
@@ -59940,7 +59938,10 @@ Macに近い表示になり、ツール全体が見やすくなります。`
       window.addEventListener('admin-shift-back-to-login', () => {
         if (!unlocked) return;
         setAdminShiftAutoPhoneEntry(false);
-        lockGateWithPasscode('', { clearSkip: true });
+        lockGateWithPasscode('', {
+          clearSkip: true,
+          preservePhoneAdminReturnUiPending: isPhoneAdminReturnUiPending()
+        });
       });
       window.addEventListener('resize', updatePasscodeEntryMode, { passive: true });
 
